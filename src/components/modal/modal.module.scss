@@ -1,0 +1,248 @@
+@use '@styles/mixins';
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+  background: rgba(15, 15, 15, 0.45);
+  backdrop-filter: blur(6px);
+  animation: modal-overlay-in 0.22s ease both;
+
+  @include mixins.mobile {
+    padding: 12px;
+  }
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  max-width: 880px;
+  margin: auto;
+  padding: 32px;
+  border-radius: 16px;
+  background: var(--green-main);
+  color: var(--light-main);
+  animation: modal-content-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @include mixins.mobile {
+    padding: 24px;
+  }
+}
+
+@keyframes modal-overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .content {
+    animation: none;
+  }
+}
+
+.close {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  display: inline-flex;
+  color: var(--light-600);
+  cursor: pointer;
+  transition: color 0.16s ease;
+
+  &:hover {
+    color: var(--light-main);
+  }
+
+  @include mixins.mobile {
+    top: 20px;
+    right: 20px;
+  }
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-right: 56px;
+}
+
+.title {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 500;
+  line-height: 1.1;
+
+  @include mixins.mobile {
+    font-size: 28px;
+  }
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--light-600);
+}
+
+/* ---- Form ---- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @include mixins.mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--light-main);
+  }
+
+  input {
+    height: 44px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--light-200);
+    font-family: var(--font-ui);
+    font-size: 16px;
+    color: var(--light-main);
+    outline: none;
+    appearance: none;
+    color-scheme: dark;
+
+    &::placeholder {
+      color: var(--light-400);
+    }
+
+    &:focus {
+      box-shadow: inset 0 0 0 1px var(--light-main);
+    }
+  }
+}
+
+.consent {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+
+  input {
+    position: relative;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    appearance: none;
+    border: 1px solid var(--light-main);
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.16s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 2px;
+      width: 6px;
+      height: 11px;
+      border: solid var(--light-main);
+      border-width: 0 2px 2px 0;
+      opacity: 0;
+      transform: rotate(45deg);
+    }
+
+    &:checked::after {
+      opacity: 1;
+    }
+  }
+
+  span {
+    font-size: 14px;
+    line-height: 1.3;
+    color: var(--light-800);
+  }
+
+  a {
+    color: var(--light-main);
+    text-decoration: underline;
+  }
+}
+
+.error {
+  margin: -8px 0 0;
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--orange-main);
+}
+
+/* ---- Thank-you state ---- */
+.thanks {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.thanksPrompt {
+  margin: 0;
+  font-size: 18px;
+  color: var(--light-main);
+}
+
+.subscribe {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--orange-main);
+  font-size: 18px;
+  font-weight: 500;
+  transition: opacity 0.16s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  .vkIcon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    background-color: var(--orange-main);
+    mask: url(/icons/icon-vk.svg) center / contain no-repeat;
+    -webkit-mask: url(/icons/icon-vk.svg) center / contain no-repeat;
+  }
+}

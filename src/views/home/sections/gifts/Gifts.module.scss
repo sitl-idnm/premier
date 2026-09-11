@@ -1,0 +1,56 @@
+@use '@styles/mixins';
+
+.root {
+  background: var(--bg-page);
+  overflow: hidden;
+}
+
+.wrap {
+  @include mixins.container;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: 70px;
+
+  @include mixins.tablet {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    padding-block: 48px;
+  }
+
+  @include mixins.mobile {
+    padding-block: 32px;
+  }
+}
+
+.left {
+  flex-shrink: 0;
+  width: 500px;
+  padding-top: 43px;
+
+  @include mixins.tablet {
+    width: 100%;
+    padding-top: 0;
+  }
+}
+
+.title {
+  @include mixins.section-title;
+
+  max-width: 500px;
+}
+
+.subtitle {
+  margin: 30px 0 0;
+  max-width: 366px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.29;
+  color: var(--gray-text);
+}
+
+.btn {
+  margin-top: 40px;
+}

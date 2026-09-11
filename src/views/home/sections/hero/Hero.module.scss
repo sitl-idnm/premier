@@ -1,0 +1,165 @@
+@use '@styles/mixins';
+@use '@styles/func' as *;
+
+.root {
+  background: var(--bg-page);
+}
+
+/* ---- Desktop / tablet: scaled 1200×508 canvas ---- */
+.canvas {
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  aspect-ratio: 1200 / 508;
+
+  @include mixins.mobile {
+    display: none;
+  }
+}
+
+.ornament {
+  position: absolute;
+  z-index: 0;
+  left: cqw(587.73);
+  top: cqw(280);
+  width: cqw(467.55);
+  height: cqw(178);
+  object-fit: contain;
+}
+
+.photoMain {
+  position: absolute;
+  z-index: 1;
+  left: cqw(20);
+  top: cqw(94);
+  width: cqw(570);
+  height: cqw(344);
+  border-radius: cqw(20);
+  object-fit: cover;
+}
+
+.photoSmall {
+  position: absolute;
+  z-index: 1;
+  left: cqw(1000);
+  top: cqw(254);
+  width: cqw(180);
+  height: cqw(184);
+  border-radius: cqw(20);
+  object-fit: cover;
+}
+
+.eyebrow {
+  position: absolute;
+  z-index: 2;
+  left: cqw(612);
+  top: cqw(91);
+  width: cqw(260);
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: cqw(14);
+  line-height: 1.4;
+  color: var(--gray-text);
+}
+
+.title {
+  position: absolute;
+  z-index: 2;
+  left: cqw(610);
+  top: cqw(131);
+  width: cqw(323);
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: cqw(65);
+  line-height: 1.15;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: var(--gray-text);
+}
+
+.note {
+  position: absolute;
+  z-index: 2;
+  left: cqw(1005);
+  top: cqw(132);
+  width: cqw(140);
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: cqw(14);
+  line-height: 1.3;
+  color: var(--gray-text);
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.cardSlot {
+  container-type: inline-size;
+  position: absolute;
+  z-index: 3;
+  left: cqw(86);
+  top: cqw(364);
+  width: cqw(253);
+  height: cqw(142);
+}
+
+/* ---- Mobile: vertical stack ---- */
+.mobile {
+  display: none;
+
+  @include mixins.mobile {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 8px 0;
+  }
+}
+
+.mPhoto {
+  width: 100%;
+  aspect-ratio: 318 / 195;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+.mEyebrow {
+  margin: 20px 0 0;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--gray-text);
+}
+
+.mTitle {
+  margin: 8px 0 0;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 52px;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--gray-heading);
+}
+
+.mNote {
+  margin: 16px 0 0;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.3;
+  color: var(--gray-text);
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.mCardSlot {
+  container-type: inline-size;
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 253 / 142;
+  margin-top: 20px;
+}

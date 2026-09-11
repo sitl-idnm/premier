@@ -1,0 +1,198 @@
+@use '@styles/mixins';
+
+.root {
+  position: relative;
+  background: var(--bg-page);
+  overflow: hidden;
+}
+
+/* Real Figma decorative smear background (top-right, behind the heading). */
+.bg {
+  position: absolute;
+  z-index: 0;
+  top: -40px;
+  right: 14%;
+  width: 652px;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+
+  @include mixins.tablet {
+    right: 4%;
+    width: 460px;
+  }
+
+  @include mixins.mobile {
+    right: 0;
+    width: 320px;
+    top: -20px;
+  }
+}
+
+.wrap {
+  @include mixins.container;
+
+  position: relative;
+  z-index: 1;
+  padding-block: 75px;
+
+  @include mixins.tablet {
+    padding-block: 48px;
+  }
+
+  @include mixins.mobile {
+    padding-block: 32px;
+  }
+}
+
+/* Heading row: title left, subtitle aligned to the LAST heading line (bottom-right). */
+.head {
+  display: flex;
+  align-items: flex-end;
+  gap: 40px;
+
+  @include mixins.tablet {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+.title {
+  @include mixins.section-title;
+
+  max-width: 775px;
+}
+
+.subtitle {
+  flex-shrink: 0;
+  width: 240px;
+  margin: 0 0 6px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.3;
+  color: var(--gray-text);
+
+  @include mixins.tablet {
+    margin: 0;
+    width: auto;
+    max-width: 360px;
+  }
+}
+
+.grid {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 40px;
+
+  @include mixins.tablet {
+    flex-wrap: wrap;
+  }
+
+  @include mixins.mobile {
+    flex-direction: column;
+  }
+}
+
+.card {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+
+  @include mixins.tablet {
+    flex: 1 1 40%;
+  }
+}
+
+.photo {
+  width: 100%;
+  aspect-ratio: 374 / 373;
+  border-radius: var(--radius-card-lg);
+  object-fit: cover;
+}
+
+.cardTitle {
+  margin: 20px 0 0;
+  font-family: var(--font-ui);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--gray-text);
+}
+
+.cardDesc {
+  margin: 15px 0 0;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.29;
+  color: var(--gray-text);
+}
+
+.cardBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  height: 50px;
+  margin-top: 20px;
+  padding: 0 30px;
+  border-radius: var(--radius-button);
+  background: var(--green-main);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--white);
+  cursor: pointer;
+  transition: background-color 0.16s ease;
+
+  &:hover {
+    background: var(--green-active);
+  }
+}
+
+/* Glass «all offers» card — equal width with the promo cards. */
+.glass {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  align-self: stretch;
+  padding: 40px 32px;
+  border: 2px solid var(--glass-stroke);
+  border-radius: var(--radius-card-lg);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  @include mixins.tablet {
+    flex: 1 1 40%;
+    min-height: 260px;
+  }
+}
+
+.deco {
+  width: 164px;
+  height: 164px;
+  border-radius: var(--radius-card);
+  object-fit: cover;
+}
+
+.allLink {
+  max-width: 160px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: var(--gray-text);
+
+  &:hover {
+    color: var(--green-main);
+  }
+}

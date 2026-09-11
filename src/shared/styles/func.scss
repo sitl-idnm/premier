@@ -1,0 +1,12 @@
+@function rem($size) {
+  $rem-size: $size / 16;
+
+  @return #{$rem-size}rem;
+}
+
+// px on the 1200px Figma desktop frame → container-query-width units, so an
+// element placed inside a `container-type: inline-size` canvas of max-width
+// 1200px matches the mockup exactly at 1200 and scales proportionally below.
+@function cqw($px, $frame: 1200) {
+  @return #{$px / $frame * 100}cqw;
+}

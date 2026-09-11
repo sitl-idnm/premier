@@ -1,0 +1,86 @@
+@use '@styles/func' as *;
+
+/* Self-scaling card: it is its own container, inner elements sized in cqw of the
+   253px Figma card so the whole thing scales with whatever box the hero gives it. */
+.card {
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: cqw(10, 253);
+  background: var(--beige);
+  box-shadow: 0 8px 24px rgba(51, 51, 51, 0.08);
+}
+
+.badge {
+  position: absolute;
+  left: cqw(10, 253);
+  top: cqw(10, 253);
+  display: inline-flex;
+  align-items: center;
+  gap: cqw(6, 253);
+  height: cqw(27, 253);
+  padding: 0 cqw(12, 253);
+  border: 1px solid var(--gray-stroke);
+  border-radius: cqw(23, 253);
+  font-family: var(--font-ui);
+  font-size: cqw(12, 253);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.flame {
+  width: cqw(10, 253);
+  height: cqw(13, 253);
+  color: #e8863a;
+}
+
+.photo {
+  position: absolute;
+  left: cqw(10, 253);
+  top: cqw(47, 253);
+  width: cqw(85, 253);
+  height: cqw(85, 253);
+  border-radius: cqw(10, 253);
+  object-fit: cover;
+}
+
+.info {
+  position: absolute;
+  left: cqw(105, 253);
+  top: cqw(47, 253);
+  right: cqw(10, 253);
+}
+
+.text {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: cqw(14, 253);
+  line-height: 1.2;
+  color: var(--ink);
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: cqw(35, 253);
+  margin-top: cqw(14, 253);
+  border-radius: cqw(35, 253);
+  background: var(--green-main);
+  font-family: var(--font-ui);
+  font-size: cqw(14, 253);
+  font-weight: 500;
+  color: var(--white);
+  cursor: pointer;
+  transition: background-color 0.16s ease;
+
+  &:hover {
+    background: var(--green-active);
+  }
+}

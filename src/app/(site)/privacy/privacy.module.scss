@@ -1,0 +1,103 @@
+@use '@styles/mixins';
+
+.root {
+  @include mixins.section-block;
+
+  // Clear the absolute (overlay) header.
+  padding-top: 116px;
+
+  @include mixins.tablet {
+    padding-top: 100px;
+  }
+}
+
+.wrap {
+  @include mixins.container;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  margin: 0 0 16px;
+  font-family: var(--font-heading);
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--gray-text);
+
+  @include mixins.mobile {
+    font-size: 28px;
+  }
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.part {
+  margin: 32px 0 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--dark-600);
+}
+
+.heading {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--dark-main);
+}
+
+.clause,
+.line {
+  margin: 0;
+  max-width: 900px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--dark-main);
+
+  @include mixins.mobile {
+    font-size: 16px;
+  }
+}
+
+/* Маркированный список — точки, зелёные маркеры */
+.list {
+  margin: 0;
+  padding-left: 26px;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  list-style: disc;
+
+  li {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--dark-main);
+
+    &::marker {
+      color: var(--green-main);
+    }
+
+    @include mixins.mobile {
+      font-size: 16px;
+    }
+  }
+}
+
+.hl {
+  color: var(--green-main);
+  font-weight: 500;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

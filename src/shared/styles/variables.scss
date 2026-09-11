@@ -1,0 +1,9 @@
+// breakpoints (Figma frames: desktop 1200px, mobile 360px; no tablet frame —
+// tablet 561–900 behaviour is inferred between the two).
+$tablet: 900px;
+$mobile: 560px;
+
+// transitions
+$transition-duration: 0.16s;
+$transition-timing-function: ease;
+$transition: $transition-duration $transition-timing-function;

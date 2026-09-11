@@ -1,0 +1,120 @@
+@use '@styles/mixins';
+
+.root {
+  background: var(--bg-page);
+  padding-block: 70px;
+
+  @include mixins.tablet {
+    padding-block: 48px;
+  }
+
+  @include mixins.mobile {
+    padding-block: 32px;
+  }
+}
+
+.head {
+  @include mixins.container;
+
+  margin-bottom: 30px;
+}
+
+.title {
+  @include mixins.section-title;
+}
+
+/* Full-width even row inside the centered container (Figma node 31:916).
+   Falls back to a horizontal scroll strip on tablet/mobile. */
+.gallery {
+  @include mixins.container;
+
+  display: flex;
+  gap: 22px;
+
+  @include mixins.tablet {
+    max-width: none;
+    padding-inline: 8px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scroll-padding-left: 8px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  @include mixins.mobile {
+    gap: 10px;
+  }
+}
+
+.photo {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 530px;
+  border-radius: var(--radius-card);
+  object-fit: cover;
+
+  @include mixins.tablet {
+    flex: 0 0 300px;
+    height: 460px;
+    scroll-snap-align: start;
+  }
+
+  @include mixins.mobile {
+    flex-basis: 260px;
+    height: 405px;
+  }
+}
+
+/* Bordered CTA card sitting in the gallery. */
+.cta {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  height: 530px;
+  padding: 32px 24px;
+  border: 1px solid var(--gray-text);
+  border-radius: var(--radius-card);
+  text-align: center;
+
+  @include mixins.tablet {
+    flex: 0 0 300px;
+    height: 460px;
+    padding: 40px;
+    scroll-snap-align: start;
+  }
+
+  @include mixins.mobile {
+    flex-basis: 260px;
+    height: 405px;
+    padding: 24px;
+  }
+}
+
+.ctaImg {
+  width: 220px;
+  height: 220px;
+  border-radius: var(--radius-card);
+  object-fit: cover;
+
+  @include mixins.mobile {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+.ctaText {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.29;
+  color: var(--gray-text);
+}

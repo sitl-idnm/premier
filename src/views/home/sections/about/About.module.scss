@@ -1,0 +1,93 @@
+@use '@styles/mixins';
+
+.root {
+  background: var(--bg-page);
+  overflow: hidden;
+}
+
+.wrap {
+  @include mixins.container;
+
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: 70px;
+
+  @include mixins.tablet {
+    flex-direction: column;
+    padding-block: 48px;
+  }
+
+  @include mixins.mobile {
+    padding-block: 32px;
+  }
+}
+
+.left {
+  flex-shrink: 0;
+  width: 520px;
+
+  @include mixins.tablet {
+    width: 100%;
+  }
+}
+
+.title {
+  @include mixins.section-title;
+
+  max-width: 660px;
+}
+
+.subtitle {
+  margin: 20px 0 0;
+  max-width: 335px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.29;
+  color: var(--gray-text);
+}
+
+.body {
+  margin-top: 40px;
+  padding-left: 99px;
+
+  @include mixins.mobile {
+    padding-left: 0;
+  }
+}
+
+.lead {
+  margin: 0;
+  max-width: 373px;
+  font-family: var(--font-ui);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--gray-text);
+}
+
+.para {
+  margin: 18px 0 0;
+  max-width: 373px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.3;
+  color: var(--gray-text);
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.visual {
+  flex-shrink: 0;
+  width: 620px;
+  max-width: 55%;
+
+  @include mixins.tablet {
+    width: 100%;
+    max-width: 560px;
+    align-self: center;
+  }
+}

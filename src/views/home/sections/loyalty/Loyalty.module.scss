@@ -1,0 +1,102 @@
+@use '@styles/mixins';
+
+.root {
+  background: var(--beige);
+}
+
+.wrap {
+  @include mixins.container;
+
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding-block: 70px;
+
+  @include mixins.tablet {
+    flex-direction: column;
+    align-items: stretch;
+    padding-block: 48px;
+  }
+
+  @include mixins.mobile {
+    padding-block: 32px;
+  }
+}
+
+.photo {
+  flex-shrink: 0;
+  width: 552px;
+  max-width: 50%;
+  height: 428px;
+  border-radius: var(--radius-card);
+  object-fit: cover;
+
+  @include mixins.tablet {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 552 / 428;
+  }
+}
+
+.right {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Heading with the subtitle tucked into the empty space right of the short
+   last line ("ЧАЩЕ") — absolute so it never widens the column. */
+.head {
+  position: relative;
+  max-width: 490px;
+}
+
+.title {
+  @include mixins.section-title;
+
+  max-width: 490px;
+}
+
+.subtitle {
+  position: absolute;
+  right: 0;
+  bottom: 10px;
+  width: 150px;
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.29;
+  color: var(--gray-text);
+
+  @include mixins.tablet {
+    position: static;
+    margin-top: 12px;
+    width: auto;
+  }
+
+  @include mixins.mobile {
+    display: none;
+  }
+}
+
+.list {
+  margin: 55px 0 0;
+  list-style: none;
+
+  @include mixins.mobile {
+    margin-top: 32px;
+  }
+}
+
+.item {
+  padding: 16px 0;
+  border-bottom: 2px solid var(--gray-stroke);
+  font-family: var(--font-ui);
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--gray-text);
+
+  &:first-child {
+    padding-top: 0;
+  }
+}

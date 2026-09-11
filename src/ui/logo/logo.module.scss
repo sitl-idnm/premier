@@ -1,0 +1,23 @@
+/* Recolorable wordmark via CSS mask (background = currentColor shows through
+   the letterform alpha of the exported SVG). */
+.logo {
+  display: inline-block;
+  flex-shrink: 0;
+  background: currentColor;
+  -webkit-mask: var(--logo-src) center / contain no-repeat;
+  mask: var(--logo-src) center / contain no-repeat;
+}
+
+.dark {
+  --logo-src: url(/icons/logo.svg);
+  width: 137px;
+  height: 42px;
+  color: var(--gray-text);
+}
+
+.light {
+  --logo-src: url(/icons/logo-light.svg);
+  width: 181px;
+  height: 56px;
+  color: var(--white);
+}

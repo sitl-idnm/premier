@@ -1,0 +1,186 @@
+@use '@styles/mixins';
+
+.root {
+  position: absolute;
+  z-index: 50;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding-block: 15px;
+  background: transparent;
+
+  /* On mobile the header joins the normal flow (a top bar) instead of overlaying
+     the hero — keeps it in the grid. `relative` still anchors the dropdown menu. */
+  @include mixins.mobile {
+    position: relative;
+    padding-block: 14px;
+  }
+}
+
+.inner {
+  @include mixins.container;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  gap: 24px;
+}
+
+.logoLink {
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+/* Centered beige nav pill (Figma #F2EDE5, radius 49, h45). */
+.navPill {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 49px;
+  height: 45px;
+  padding: 0 36px;
+  border-radius: 49px;
+  background: var(--beige);
+  transform: translate(-50%, -50%);
+
+  @include mixins.tablet {
+    display: none;
+  }
+}
+
+.navLink {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--gray-text);
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--green-main);
+  }
+}
+
+/* Green «Записаться» pill (Figma #007965, 170x45, radius 65). */
+.cta {
+  flex-shrink: 0;
+  min-width: 170px;
+  height: 45px;
+  padding: 0 25px;
+  border-radius: 65px;
+  background: var(--green-main);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--white);
+  cursor: pointer;
+  transition: background-color 0.16s ease;
+
+  &:hover {
+    background: var(--green-active);
+  }
+
+  @include mixins.tablet {
+    display: none;
+  }
+}
+
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+  cursor: pointer;
+
+  span {
+    width: 24px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--gray-text);
+    transition: transform 0.16s ease, opacity 0.16s ease;
+  }
+
+  @include mixins.tablet {
+    display: flex;
+  }
+}
+
+.burgerOpen {
+  span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  span:nth-child(2) {
+    opacity: 0;
+  }
+
+  span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
+.mobileMenu {
+  position: absolute;
+  z-index: 20;
+  top: 100%;
+  right: 8px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 20px;
+  background: var(--white);
+  box-shadow: 0 12px 32px rgba(51, 51, 51, 0.16);
+  transform-origin: top center;
+  animation: menuIn 0.24s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobileMenu {
+    animation: none;
+  }
+}
+
+.mobileLink {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 12px;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--gray-text);
+
+  &:hover {
+    background: var(--beige);
+  }
+}
+
+.mobileCta {
+  margin-top: 8px;
+  height: 48px;
+  border-radius: var(--radius-button);
+  background: var(--green-main);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--white);
+  cursor: pointer;
+}

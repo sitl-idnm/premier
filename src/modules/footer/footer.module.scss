@@ -1,0 +1,87 @@
+@use '@styles/mixins';
+
+/* Centered rounded card at container width with a small gap from the page bottom. */
+.root {
+  width: calc(100% - 40px);
+  max-width: 1160px;
+  margin: 0 auto 16px;
+  border-radius: var(--radius-panel);
+  background: var(--beige);
+  color: var(--ink);
+  overflow: hidden;
+
+  @include mixins.mobile {
+    width: calc(100% - 24px);
+    border-radius: var(--radius-card);
+  }
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  width: 100%;
+  min-height: 130px;
+  padding: 34px 48px;
+
+  @include mixins.tablet {
+    flex-wrap: wrap;
+    gap: 32px;
+    padding: 30px 32px;
+  }
+
+  @include mixins.mobile {
+    padding: 28px 24px;
+  }
+}
+
+.logoLink {
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.cols {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  gap: 40px;
+  max-width: 760px;
+  margin-left: 60px;
+
+  @include mixins.tablet {
+    margin-left: 0;
+    max-width: none;
+  }
+
+  @include mixins.mobile {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.text {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.29;
+  color: var(--ink);
+}
+
+.link {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.29;
+  color: var(--ink);
+
+  &:hover {
+    color: var(--green-main);
+  }
+}

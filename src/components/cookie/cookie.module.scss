@@ -1,0 +1,38 @@
+@use '@styles/mixins';
+
+.root {
+  position: fixed;
+  z-index: 90;
+  bottom: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 800px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--light-main);
+  box-shadow: 0 12px 40px rgba(15, 15, 15, 0.24);
+
+  @include mixins.mobile {
+    flex-direction: column;
+    align-items: stretch;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    max-width: none;
+  }
+}
+
+.text {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--dark-main);
+
+  a {
+    color: var(--orange-main);
+    text-decoration: underline;
+  }
+}

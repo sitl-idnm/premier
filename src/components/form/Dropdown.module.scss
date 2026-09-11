@@ -1,0 +1,91 @@
+.root {
+  position: relative;
+  width: 100%;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  height: 44px;
+  padding: 12px;
+  border: 1px solid var(--light-200);
+  border-radius: 8px;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  color: var(--light-main);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease;
+
+  &:hover,
+  &.open {
+    border-color: var(--light-main);
+  }
+}
+
+.placeholder {
+  color: var(--light-400);
+}
+
+.caret {
+  flex-shrink: 0;
+  color: var(--light-main);
+  transition: transform 0.2s ease;
+
+  .open & {
+    transform: rotate(180deg);
+  }
+}
+
+.menu {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid var(--light-200);
+  border-radius: 8px;
+  background: var(--green-main);
+  box-shadow: 0 12px 32px rgba(15, 15, 15, 0.28);
+  animation: dropdown-in 0.16s ease;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  color: var(--light-main);
+  cursor: pointer;
+  transition: background-color 0.14s ease;
+
+  &:hover {
+    background: rgba(240, 240, 240, 0.08);
+  }
+}
+
+.selected {
+  background: rgba(240, 240, 240, 0.06);
+}
+
+.check {
+  flex-shrink: 0;
+  color: var(--light-main);
+}

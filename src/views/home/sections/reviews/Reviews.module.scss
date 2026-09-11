@@ -1,0 +1,149 @@
+@use '@styles/mixins';
+
+.root {
+  background: var(--beige);
+}
+
+.wrap {
+  @include mixins.container;
+
+  padding-block: 70px;
+
+  @include mixins.tablet {
+    padding-block: 48px;
+  }
+
+  @include mixins.mobile {
+    padding-block: 32px;
+  }
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 48px;
+  margin-bottom: 40px;
+
+  @include mixins.tablet {
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+}
+
+.title {
+  @include mixins.section-title;
+
+  flex-shrink: 0;
+  max-width: 478px;
+}
+
+/* Right column: intro + restored testimonial quote, top-aligned near heading. */
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 430px;
+  padding-top: 6px;
+}
+
+.intro {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.29;
+  color: var(--gray-text);
+}
+
+.quote {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--text-heading);
+}
+
+/* Mobile-only salon switch. */
+.mswitch {
+  display: none;
+
+  @include mixins.mobile {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 6px;
+    margin-bottom: 20px;
+    border-radius: var(--radius-button);
+    background: var(--white);
+  }
+}
+
+.msbtn {
+  height: 42px;
+  border: none;
+  border-radius: var(--radius-button);
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--gray-text);
+  cursor: pointer;
+}
+
+.msbtnActive {
+  background: var(--green-main);
+  color: var(--white);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  @include mixins.tablet {
+    grid-template-columns: 1fr;
+  }
+
+  @include mixins.mobile {
+    .widget {
+      display: none;
+    }
+
+    .widget[data-active='true'] {
+      display: flex;
+    }
+  }
+}
+
+.widget {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-button);
+  background: var(--white);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-text);
+}
+
+.frame {
+  width: 100%;
+  height: 560px;
+  border: 1px solid #e6e6e6;
+  border-radius: var(--radius-card);
+  background: var(--white);
+
+  @include mixins.mobile {
+    height: 480px;
+  }
+}
+

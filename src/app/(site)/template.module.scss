@@ -1,0 +1,28 @@
+// Обёртка страницы: тянется на всю высоту (чтобы футер прижимался к низу) и
+// проигрывает анимацию появления при каждой навигации.
+.page {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+  animation: page-enter 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Уважаем системную настройку «уменьшить движение».
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    animation: none;
+  }
+}

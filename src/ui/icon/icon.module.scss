@@ -1,0 +1,50 @@
+/* Recolorable Tilda icons via CSS mask (monochrome under currentColor). */
+.ic {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background: currentColor;
+  -webkit-mask: var(--i) center / contain no-repeat;
+  mask: var(--i) center / contain no-repeat;
+}
+
+.ic_coins {
+  --i: url(/icons/icon-coins.svg);
+}
+
+.ic_helmet {
+  --i: url(/icons/icon-helmet.svg);
+}
+
+.ic_kid {
+  --i: url(/icons/icon-kid.svg);
+}
+
+.ic_smile {
+  --i: url(/icons/icon-smile.svg);
+}
+
+.ic_directions {
+  --i: url(/icons/icon-directions.svg);
+}
+
+.ic_discount {
+  --i: url(/icons/icon-discount.svg);
+}
+
+.ic_forest {
+  --i: url(/icons/icon-forest.svg);
+}
+
+.ic_stock {
+  --i: url(/icons/icon-stock.svg);
+}
+
+.ic_hourglass {
+  --i: url(/icons/icon-hourglass.svg);
+}
+
+.ic_check-circle {
+  --i: url(/icons/icon-check-circle.svg);
+}

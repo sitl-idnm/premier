@@ -1,0 +1,50 @@
+@use '@styles/mixins';
+
+.stage {
+  position: relative;
+  flex-shrink: 0;
+  width: 615px;
+  max-width: 58%;
+  aspect-ratio: 768 / 606;
+
+  @include mixins.tablet {
+    width: 100%;
+    max-width: 480px;
+    align-self: center;
+  }
+}
+
+/* Beaded frame — the envelope back. */
+.back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 1;
+}
+
+/* Photo tucked at an angle — its own white frame, no extra border/shadow.
+   GSAP drives the scroll entrance; opacity:0 avoids a pre-anim flash. */
+.photo {
+  position: absolute;
+  top: 13%;
+  left: 33%;
+  z-index: 2;
+  width: 37%;
+  height: auto;
+  opacity: 0;
+  transform: rotate(7deg);
+  transform-origin: center center;
+}
+
+/* Front flap (V-notch) overlaps the photo bottom → tucked "inside" the envelope. */
+.front {
+  position: absolute;
+  left: 14%;
+  bottom: 9%;
+  z-index: 3;
+  width: 69%;
+  height: auto;
+  pointer-events: none;
+}

@@ -1,0 +1,81 @@
+@use '@styles/mixins';
+
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 640px;
+  padding: 88px 64px 128px;
+  overflow-x: clip;
+  background: var(--light-main);
+
+  @include mixins.tablet {
+    padding: 64px 24px 120px;
+  }
+
+  @include mixins.mobile {
+    min-height: 480px;
+    padding: 48px 12px 96px;
+  }
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  text-align: center;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.code {
+  font-family: var(--font-logo);
+  font-size: 120px;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--green-main);
+
+  @include mixins.mobile {
+    font-size: 48px;
+  }
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--dark-main);
+
+  @include mixins.mobile {
+    font-size: 16px;
+  }
+}
+
+.button {
+  width: 445px;
+  max-width: 100%;
+
+  @include mixins.mobile {
+    width: 100%;
+  }
+}
+
+.stripes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -20px;
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
