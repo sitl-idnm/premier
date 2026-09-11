@@ -30,11 +30,12 @@
   color: var(--gray-text);
 }
 
-/* Mobile-only salon switch. */
+/* Mobile-only salon switch with a sliding highlight. */
 .mswitch {
   display: none;
 
   @include mixins.mobile {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 6px;
@@ -44,7 +45,21 @@
   }
 }
 
+.msInd {
+  position: absolute;
+  z-index: 0;
+  top: 6px;
+  left: 6px;
+  width: calc((100% - 12px) / 2);
+  height: 42px;
+  border-radius: var(--radius-button);
+  background: var(--green-main);
+  transition: transform 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .msbtn {
+  position: relative;
+  z-index: 1;
   height: 42px;
   border: none;
   border-radius: var(--radius-button);
@@ -54,10 +69,10 @@
   font-weight: 500;
   color: var(--gray-text);
   cursor: pointer;
+  transition: color 0.24s ease;
 }
 
 .msbtnActive {
-  background: var(--green-main);
   color: var(--white);
 }
 

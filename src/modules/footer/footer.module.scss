@@ -31,8 +31,12 @@
     padding: 30px 32px;
   }
 
+  /* On mobile: logo on top, then data, then the Telegram icon — a column. */
   @include mixins.mobile {
-    padding: 28px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 28px 20px;
   }
 }
 
@@ -84,4 +88,30 @@
   &:hover {
     color: var(--green-main);
   }
+}
+
+/* Round Telegram button. */
+.tg {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--green-main);
+  color: var(--white);
+  transition: background-color 0.16s ease;
+
+  &:hover {
+    background: var(--green-active);
+  }
+}
+
+.tgIcon {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background: currentColor;
+  -webkit-mask: url(/icons/telegram.svg) center / contain no-repeat;
+  mask: url(/icons/telegram.svg) center / contain no-repeat;
 }

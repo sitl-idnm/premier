@@ -1,9 +1,8 @@
 'use client'
 
 import { FC } from 'react'
-import { modalAtom } from '@/shared/atoms/modalAtom'
+import { BOOKING_URL } from '@/shared/const/yclients'
 import { GOALS, ymGoal } from '@/shared/lib/metrika'
-import { useSetAtom } from 'jotai'
 
 import styles from './HeroCard.module.scss'
 
@@ -17,13 +16,6 @@ type HeroCardProps = {
 /** Real, interactive «Скидка 20%» card from the hero (was a flat PNG). The
  *  button opens the global booking modal. */
 export const HeroCard: FC<HeroCardProps> = ({ badge, title, sub, btn }) => {
-  const setModal = useSetAtom(modalAtom)
-
-  const open = () => {
-    ymGoal(GOALS.openBooking)
-    setModal('booking')
-  }
-
   return (
     <div className={styles.card}>
       <span className={styles.badge}>
@@ -44,9 +36,15 @@ export const HeroCard: FC<HeroCardProps> = ({ badge, title, sub, btn }) => {
           <br />
           {sub}
         </p>
-        <button type="button" className={styles.btn} onClick={open}>
+        <a
+          className={styles.btn}
+          href={BOOKING_URL}
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => ymGoal(GOALS.openBooking, { place: 'hero' })}
+        >
           {btn}
-        </button>
+        </a>
       </div>
     </div>
   )

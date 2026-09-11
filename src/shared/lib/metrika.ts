@@ -5,23 +5,29 @@
 
 export const YM_ID = Number(process.env.NEXT_PUBLIC_YM_ID) || 0
 
-/** All conversion goals fired from the UI. Keep in sync with Метрика dashboard. */
+/** All conversion goals fired from the UI. Keep in sync with the create-ym-goals
+ *  script and the Метрика dashboard. Most opens/submits carry a `place` param. */
 export const GOALS = {
-  // modal opens
+  // booking modal
   openBooking: 'open_booking_modal',
-  openEvent: 'open_event_modal',
-  // successful form submits
   submitBooking: 'submit_booking',
-  submitEvent: 'submit_event',
-  submitSafety: 'submit_safety',
-  // failed submit (network / server)
   submitError: 'submit_error',
   // contact clicks
   clickPhone: 'click_phone',
   clickTelegram: 'click_telegram',
   clickVk: 'click_vk',
-  // misc interactions
-  cookieAccept: 'cookie_accept'
+  // navigation / misc
+  navClick: 'nav_click',
+  cookieAccept: 'cookie_accept',
+  scrollTop: 'scroll_top',
+  // prices block
+  pricesSearch: 'prices_search',
+  pricesAi: 'prices_ai_result',
+  pricesSalon: 'prices_salon_switch',
+  pricesCategory: 'prices_category',
+  pricesExpandAll: 'prices_expand_all',
+  // salon switch on reviews / map (mobile)
+  salonSwitch: 'salon_switch'
 } as const
 
 export type Goal = (typeof GOALS)[keyof typeof GOALS]

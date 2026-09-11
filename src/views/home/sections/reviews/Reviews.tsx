@@ -3,6 +3,7 @@
 import { FC, useState } from 'react'
 import classNames from 'classnames'
 import { type SiteContent } from '@/shared/content'
+import { GOALS, ymGoal } from '@/shared/lib/metrika'
 import { nbp } from '@/shared/lib/typography'
 
 import styles from './Reviews.module.scss'
@@ -11,6 +12,11 @@ const salonName = (label: string) => label.split('·')[0].trim()
 
 const Reviews: FC<{ data: SiteContent['reviews'] }> = ({ data }) => {
   const [active, setActive] = useState(0)
+
+  const switchSalon = (i: number, name: string) => {
+    setActive(i)
+    ymGoal(GOALS.salonSwitch, { place: 'reviews', salon: name })
+  }
 
   return (
     <section className={styles.root} id="reviews">
@@ -25,6 +31,11 @@ const Reviews: FC<{ data: SiteContent['reviews'] }> = ({ data }) => {
 
         {/* Mobile-only salon switch — one widget at a time to cut clutter. */}
         <div className={styles.mswitch} role="tablist" aria-label="Выбор салона">
+          <span
+            className={styles.msInd}
+            style={{ transform: `translateX(${active * 100}%)` }}
+            aria-hidden="true"
+          />
           {data.widgets.map((w, i) => (
             <button
               key={w.src}
@@ -34,7 +45,7 @@ const Reviews: FC<{ data: SiteContent['reviews'] }> = ({ data }) => {
               className={classNames(styles.msbtn, {
                 [styles.msbtnActive]: i === active
               })}
-              onClick={() => setActive(i)}
+              onClick={() => switchSalon(i, salonName(w.label))}
             >
               {salonName(w.label)}
             </button>

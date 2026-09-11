@@ -1,12 +1,15 @@
 import Link from 'next/link'
 import { getSiteContent } from '@/shared/content'
+import { GOALS } from '@/shared/lib/metrika'
 import { nbp } from '@/shared/lib/typography'
 import { Logo } from '@ui/logo'
+
+import { TrackedLink } from '@/components/analytics/TrackedLink'
 
 import styles from './footer.module.scss'
 
 const Footer = async () => {
-  const { footer } = await getSiteContent()
+  const { footer, contacts } = await getSiteContent()
 
   return (
     <footer className={styles.root}>
@@ -30,6 +33,18 @@ const Footer = async () => {
             <span className={styles.text}>{footer.licenseNumber}</span>
           </div>
         </div>
+
+        <TrackedLink
+          className={styles.tg}
+          href={contacts.telegram}
+          target="_blank"
+          rel="noreferrer"
+          goal={GOALS.clickTelegram}
+          goalParams={{ place: 'footer' }}
+          aria-label="Telegram"
+        >
+          <span className={styles.tgIcon} aria-hidden="true" />
+        </TrackedLink>
       </div>
     </footer>
   )

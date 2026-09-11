@@ -4,12 +4,19 @@ import { FC, useState } from 'react'
 import classNames from 'classnames'
 import { CtaButton } from '@/components/cta/CtaButton'
 import { type SiteContent } from '@/shared/content'
+import { BOOKING_URL } from '@/shared/const/yclients'
+import { GOALS, ymGoal } from '@/shared/lib/metrika'
 import { nbp } from '@/shared/lib/typography'
 
 import styles from './Locations.module.scss'
 
 const Locations: FC<{ data: SiteContent['locations'] }> = ({ data }) => {
   const [active, setActive] = useState(0)
+
+  const switchSalon = (i: number, metro: string) => {
+    setActive(i)
+    ymGoal(GOALS.salonSwitch, { place: 'map', salon: metro })
+  }
 
   return (
     <section className={styles.root} id="locations">
@@ -19,6 +26,11 @@ const Locations: FC<{ data: SiteContent['locations'] }> = ({ data }) => {
 
         {/* Mobile-only salon switch. */}
         <div className={styles.mswitch} role="tablist" aria-label="Выбор салона">
+          <span
+            className={styles.msInd}
+            style={{ transform: `translateX(${active * 100}%)` }}
+            aria-hidden="true"
+          />
           {data.items.map((item, i) => (
             <button
               key={item.metro}
@@ -28,7 +40,7 @@ const Locations: FC<{ data: SiteContent['locations'] }> = ({ data }) => {
               className={classNames(styles.msbtn, {
                 [styles.msbtnActive]: i === active
               })}
-              onClick={() => setActive(i)}
+              onClick={() => switchSalon(i, item.metro)}
             >
               {item.metro}
             </button>
@@ -59,13 +71,16 @@ const Locations: FC<{ data: SiteContent['locations'] }> = ({ data }) => {
               <a
                 href={`tel:${item.phone.replace(/[^+\d]/g, '')}`}
                 className={styles.phone}
+                onClick={() => ymGoal(GOALS.clickPhone, { salon: item.metro })}
               >
                 {item.phone}
               </a>
               <p className={styles.hours}>{nbp(item.hours)}</p>
 
               <div className={styles.btn}>
-                <CtaButton modal="booking">{data.btnLabel}</CtaButton>
+                <CtaButton href={BOOKING_URL} place="locations">
+                  {data.btnLabel}
+                </CtaButton>
               </div>
             </article>
           ))}

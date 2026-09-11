@@ -28,8 +28,8 @@
    GSAP drives the scroll entrance; opacity:0 avoids a pre-anim flash. */
 .photo {
   position: absolute;
-  top: 13%;
-  left: 33%;
+  top: 21%;
+  left: 43%;
   z-index: 2;
   width: 37%;
   height: auto;
@@ -41,8 +41,8 @@
 /* Front flap (V-notch) overlaps the photo bottom → tucked "inside" the envelope. */
 .front {
   position: absolute;
-  left: 14%;
-  bottom: 9%;
+  left: 31%;
+  bottom: 12%;
   z-index: 3;
   width: 69%;
   height: auto;

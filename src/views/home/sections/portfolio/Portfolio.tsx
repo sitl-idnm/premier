@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { CtaButton } from '@/components/cta/CtaButton'
 import { type SiteContent } from '@/shared/content'
+import { BOOKING_URL } from '@/shared/const/yclients'
 import { nbp } from '@/shared/lib/typography'
 
 import styles from './Portfolio.module.scss'
@@ -19,7 +20,9 @@ const Portfolio: FC<{ data: SiteContent['portfolio'] }> = ({ data }) => {
         <div className={styles.cta}>
           <img src="/images/portfolio-cta.png" alt="" className={styles.ctaImg} />
           <p className={styles.ctaText}>{nbp(data.ctaText)}</p>
-          <CtaButton modal="booking">{data.ctaBtn}</CtaButton>
+          <CtaButton href={BOOKING_URL} place="portfolio">
+            {data.ctaBtn}
+          </CtaButton>
         </div>
 
         <img src="/images/portfolio-3.png" alt="Работа мастера" className={styles.photo} />

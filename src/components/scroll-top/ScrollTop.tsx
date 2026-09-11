@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import classNames from 'classnames'
+import { GOALS, ymGoal } from '@/shared/lib/metrika'
 
 import styles from './ScrollTop.module.scss'
 
@@ -17,6 +18,7 @@ export const ScrollTop = () => {
   }, [])
 
   const toTop = () => {
+    ymGoal(GOALS.scrollTop)
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' })
   }

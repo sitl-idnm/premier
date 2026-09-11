@@ -382,9 +382,35 @@
   }
 }
 
+/* Smooth height collapse via animatable grid rows (opens AND closes). */
+.accWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.34s ease,
+    opacity 0.28s ease;
+}
+
+.accWrapOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
 .accBody {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 4px;
+}
+
+.accWrapOpen .accBody {
   padding: 4px 4px 24px;
-  animation: priceIn 0.28s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accWrap {
+    transition: none;
+  }
 }
 
 /* Fades in when the salon/tab changes. */

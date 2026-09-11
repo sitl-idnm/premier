@@ -3,6 +3,7 @@
 import { FC, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { type SiteContent } from '@/shared/content'
+import { GOALS, ymGoal } from '@/shared/lib/metrika'
 import { nbp } from '@/shared/lib/typography'
 
 import styles from './Prices.module.scss'
@@ -82,6 +83,7 @@ const Prices: FC<{ data: SiteContent['prices'] }> = ({ data }) => {
     let cancelled = false
     setAiLoading(true)
     const id = setTimeout(async () => {
+      ymGoal(GOALS.pricesSearch, { query })
       try {
         const res = await fetch('/api/price-search', {
           method: 'POST',
@@ -89,7 +91,11 @@ const Prices: FC<{ data: SiteContent['prices'] }> = ({ data }) => {
           body: JSON.stringify({ query, salon: salon.key })
         })
         const json = await res.json()
-        if (!cancelled) setAiNames(Array.isArray(json.names) ? json.names : [])
+        const names = Array.isArray(json.names) ? json.names : []
+        if (!cancelled) {
+          setAiNames(names)
+          if (names.length) ymGoal(GOALS.pricesAi, { query })
+        }
       } catch {
         if (!cancelled) setAiNames([])
       } finally {
@@ -120,15 +126,20 @@ const Prices: FC<{ data: SiteContent['prices'] }> = ({ data }) => {
     setSalonKey(key)
     if (next) setTabKey(next.tabs[0].key)
     setOpen([0])
+    ymGoal(GOALS.pricesSalon, { salon: next?.label ?? key })
   }
   const selectTab = (key: string) => {
     setTabKey(key)
     setOpen([0])
+    const t = salon.tabs.find((x) => x.key === key)
+    ymGoal(GOALS.pricesCategory, { category: t?.label ?? key })
   }
 
   const allOpen = open.length === tab.sections.length
-  const toggleAll = () =>
+  const toggleAll = () => {
     setOpen(allOpen ? [] : tab.sections.map((_, i) => i))
+    if (!allOpen) ymGoal(GOALS.pricesExpandAll, { category: tab.label })
+  }
 
   const activeSalonIndex = data.salons.findIndex((s) => s.key === salon.key)
 
@@ -299,7 +310,11 @@ const Prices: FC<{ data: SiteContent['prices'] }> = ({ data }) => {
                       </span>
                     </button>
 
-                    {isOpen && (
+                    <div
+                      className={classNames(styles.accWrap, {
+                        [styles.accWrapOpen]: isOpen
+                      })}
+                    >
                       <div className={styles.accBody}>
                         <div className={styles.table}>
                           <div className={classNames(styles.headRow, gridClass)}>
@@ -337,7 +352,7 @@ const Prices: FC<{ data: SiteContent['prices'] }> = ({ data }) => {
                           <p className={styles.note}>{nbp(section.note)}</p>
                         )}
                       </div>
-                    )}
+                    </div>
                   </div>
                 )
               })}

@@ -14,21 +14,26 @@
  */
 
 const TOKEN = process.env.YM_OAUTH_TOKEN
-const COUNTER = process.env.YM_COUNTER_ID || '110512444'
+const COUNTER = process.env.YM_COUNTER_ID || '103381080'
 const API = `https://api-metrika.yandex.net/management/v1/counter/${COUNTER}/goals`
 
 // identifier (passed to ym reachGoal) → human-readable name in the dashboard
 const GOALS = [
-  ['open_booking_modal', 'Открытие модалки бронирования'],
-  ['open_event_modal', 'Открытие модалки мероприятия'],
-  ['submit_booking', 'Заявка: бронирование онлайн'],
-  ['submit_event', 'Заявка: мероприятие'],
-  ['submit_safety', 'Заявка: «Запишитесь прямо сейчас»'],
+  ['open_booking_modal', 'Открытие формы «Записаться»'],
+  ['submit_booking', 'Заявка отправлена'],
   ['submit_error', 'Ошибка отправки заявки'],
   ['click_phone', 'Клик по телефону'],
   ['click_telegram', 'Клик по Telegram'],
   ['click_vk', 'Клик по ВКонтакте'],
-  ['cookie_accept', 'Принятие cookie']
+  ['nav_click', 'Клик по пункту меню'],
+  ['cookie_accept', 'Принятие cookie'],
+  ['scroll_top', 'Клик «наверх»'],
+  ['prices_search', 'Прайс: поиск услуги'],
+  ['prices_ai_result', 'Прайс: результат ИИ-поиска'],
+  ['prices_salon_switch', 'Прайс: переключение салона'],
+  ['prices_category', 'Прайс: выбор категории'],
+  ['prices_expand_all', 'Прайс: раскрыть все'],
+  ['salon_switch', 'Переключение салона (отзывы/карта)']
 ]
 
 if (!TOKEN) {

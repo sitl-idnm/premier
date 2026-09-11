@@ -2,13 +2,12 @@
 
 import { FC, useState } from 'react'
 import Link from 'next/link'
-import { modalAtom } from '@/shared/atoms/modalAtom'
 import { type SiteContent } from '@/shared/content/defaults'
+import { BOOKING_URL } from '@/shared/const/yclients'
 import { GOALS, ymGoal } from '@/shared/lib/metrika'
 import { nbp } from '@/shared/lib/typography'
 import { Logo } from '@ui/logo'
 import classNames from 'classnames'
-import { useSetAtom } from 'jotai'
 
 import styles from './header.module.scss'
 
@@ -19,14 +18,14 @@ type HeaderProps = {
 
 const Header: FC<HeaderProps> = ({ header }) => {
   const [menuOpen, setMenuOpen] = useState(false)
-  const setModal = useSetAtom(modalAtom)
   const navLinks = header.nav
 
-  const openBooking = () => {
-    ymGoal(GOALS.openBooking)
-    setModal('booking')
+  const onBook = () => {
+    ymGoal(GOALS.openBooking, { place: 'header' })
     setMenuOpen(false)
   }
+
+  const onNav = (label: string) => ymGoal(GOALS.navClick, { label })
 
   return (
     <header className={styles.root}>
@@ -37,19 +36,26 @@ const Header: FC<HeaderProps> = ({ header }) => {
 
         <nav className={styles.navPill}>
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className={styles.navLink}>
+            <Link
+              key={link.href}
+              href={link.href}
+              className={styles.navLink}
+              onClick={() => onNav(link.label)}
+            >
               {nbp(link.label)}
             </Link>
           ))}
         </nav>
 
-        <button
-          type="button"
+        <a
           className={styles.cta}
-          onClick={openBooking}
+          href={BOOKING_URL}
+          target="_blank"
+          rel="noreferrer"
+          onClick={onBook}
         >
           {header.ctaLabel}
-        </button>
+        </a>
 
         <button
           className={classNames(styles.burger, {
@@ -72,18 +78,23 @@ const Header: FC<HeaderProps> = ({ header }) => {
               key={link.href}
               href={link.href}
               className={styles.mobileLink}
-              onClick={() => setMenuOpen(false)}
+              onClick={() => {
+                onNav(link.label)
+                setMenuOpen(false)
+              }}
             >
               {nbp(link.label)}
             </Link>
           ))}
-          <button
-            type="button"
+          <a
             className={styles.mobileCta}
-            onClick={openBooking}
+            href={BOOKING_URL}
+            target="_blank"
+            rel="noreferrer"
+            onClick={onBook}
           >
             {header.ctaLabel}
-          </button>
+          </a>
         </nav>
       )}
     </header>

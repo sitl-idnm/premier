@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { CtaButton } from '@/components/cta/CtaButton'
 import { type SiteContent } from '@/shared/content'
+import { CERTIFICATES_URL } from '@/shared/const/yclients'
 import { nbp } from '@/shared/lib/typography'
 
 import { Envelope } from './Envelope'
@@ -14,7 +15,9 @@ const Gifts: FC<{ data: SiteContent['gifts'] }> = ({ data }) => {
           <h2 className={styles.title}>{data.title}</h2>
           <p className={styles.subtitle}>{nbp(data.subtitle)}</p>
           <div className={styles.btn}>
-            <CtaButton modal="booking">{data.btnLabel}</CtaButton>
+            <CtaButton href={CERTIFICATES_URL} place="gifts">
+              {data.btnLabel}
+            </CtaButton>
           </div>
         </div>
 

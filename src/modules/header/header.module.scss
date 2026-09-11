@@ -67,7 +67,10 @@
 
 /* Green «Записаться» pill (Figma #007965, 170x45, radius 65). */
 .cta {
+  display: inline-flex;
   flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
   min-width: 170px;
   height: 45px;
   padding: 0 25px;
@@ -174,6 +177,9 @@
 }
 
 .mobileCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin-top: 8px;
   height: 48px;
   border-radius: var(--radius-button);
