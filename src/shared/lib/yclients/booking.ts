@@ -52,13 +52,16 @@ export async function bookServices(
   return { categories: data.category ?? [], services: data.services ?? [] }
 }
 
-/** Staff who can perform the given service (or all bookable staff). */
+const svcQuery = (serviceIds: number[]) =>
+  serviceIds.map((s) => `service_ids[]=${s}`).join('&')
+
+/** Staff who can perform ALL the given services (or all bookable staff). */
 export async function bookStaff(
   salon: string,
-  serviceId?: number
+  serviceIds: number[] = []
 ): Promise<BookStaff[]> {
   const id = companyId(salon)
-  const q = serviceId ? `?service_ids[]=${serviceId}` : ''
+  const q = serviceIds.length ? `?${svcQuery(serviceIds)}` : ''
   const data = await yc<RawStaff[]>(`/book_staff/${id}${q}`, { revalidate: FRESH })
   return data
     .filter((s) => s.bookable !== false)
@@ -72,15 +75,15 @@ export async function bookStaff(
     }))
 }
 
-/** Dates that have free slots for a service/staff (YYYY-MM-DD strings). */
+/** Dates that have free slots for the services/staff (YYYY-MM-DD strings). */
 export async function bookDates(
   salon: string,
-  serviceId: number,
+  serviceIds: number[],
   staffId: number
 ): Promise<string[]> {
   const id = companyId(salon)
   const data = await yc<{ booking_dates?: string[] }>(
-    `/book_dates/${id}?service_ids[]=${serviceId}&staff_id=${staffId}`,
+    `/book_dates/${id}?${svcQuery(serviceIds)}&staff_id=${staffId}`,
     { revalidate: 0 }
   )
   return data.booking_dates ?? []
@@ -91,11 +94,11 @@ export async function bookTimes(
   salon: string,
   staffId: number,
   date: string,
-  serviceId: number
+  serviceIds: number[]
 ): Promise<BookTime[]> {
   const id = companyId(salon)
   return yc<BookTime[]>(
-    `/book_times/${id}/${staffId}/${date}?service_ids[]=${serviceId}`,
+    `/book_times/${id}/${staffId}/${date}?${svcQuery(serviceIds)}`,
     { revalidate: 0 }
   )
 }
@@ -120,7 +123,7 @@ export type CreateRecordInput = {
   email?: string
   code: string
   comment?: string
-  serviceId: number
+  serviceIds: number[]
   staffId: number
   datetime: string
 }
@@ -139,7 +142,7 @@ export async function createRecord(input: CreateRecordInput): Promise<unknown> {
       appointments: [
         {
           id: 0,
-          services: [input.serviceId],
+          services: input.serviceIds,
           staff_id: input.staffId,
           datetime: input.datetime
         }

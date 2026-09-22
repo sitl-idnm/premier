@@ -26,6 +26,9 @@ export async function POST(req: Request) {
 
   const action = String(body.action ?? '')
   const salon = String(body.salon ?? '')
+  const serviceIds = Array.isArray(body.serviceIds)
+    ? body.serviceIds.map(Number).filter((n) => Number.isFinite(n))
+    : []
 
   try {
     switch (action) {
@@ -34,15 +37,10 @@ export async function POST(req: Request) {
           await bookServices(salon, body.staffId ? Number(body.staffId) : undefined)
         )
       case 'staff':
-        return NextResponse.json({
-          staff: await bookStaff(
-            salon,
-            body.serviceId ? Number(body.serviceId) : undefined
-          )
-        })
+        return NextResponse.json({ staff: await bookStaff(salon, serviceIds) })
       case 'dates':
         return NextResponse.json({
-          dates: await bookDates(salon, Number(body.serviceId), Number(body.staffId))
+          dates: await bookDates(salon, serviceIds, Number(body.staffId))
         })
       case 'times':
         return NextResponse.json({
@@ -50,7 +48,7 @@ export async function POST(req: Request) {
             salon,
             Number(body.staffId),
             String(body.date),
-            Number(body.serviceId)
+            serviceIds
           )
         })
       case 'code':
@@ -64,7 +62,7 @@ export async function POST(req: Request) {
           email: body.email ? String(body.email) : undefined,
           code: String(body.code),
           comment: body.comment ? String(body.comment) : undefined,
-          serviceId: Number(body.serviceId),
+          serviceIds,
           staffId: Number(body.staffId),
           datetime: String(body.datetime)
         })

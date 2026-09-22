@@ -5,6 +5,7 @@ import { Portal } from '@/service/portal'
 import { bookingAtom } from '@/shared/atoms/bookingAtom'
 import { useScrollLock } from '@/shared/hooks'
 import { GOALS, ymGoal } from '@/shared/lib/metrika'
+import classNames from 'classnames'
 import { useAtom } from 'jotai'
 
 import styles from './BookingFlow.module.scss'
@@ -31,8 +32,9 @@ async function call(payload: Record<string, unknown>) {
   return json
 }
 
-const rub = (n: number) => `${n.toLocaleString('ru-RU').replace(/\u00A0/g, ' ')} ₽`
-const priceLabel = (s?: Svc) => (s ? (s.price_min === s.price_max ? rub(s.price_min) : `от ${rub(s.price_min)}`) : '')
+// Regular-space thousands (avoids nbsp from toLocaleString).
+const rub = (n: number) => `${String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ₽`
+const priceLabel = (s: Svc) => (s.price_min === s.price_max ? rub(s.price_min) : `от ${rub(s.price_min)}`)
 const MONTHS = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
 const WD = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
 const iso = (d: Date) =>
@@ -43,9 +45,7 @@ const prettyDate = (s: string) =>
 const Stars = ({ rating }: { rating: number }) => (
   <span className={styles.stars} aria-hidden="true">
     {[1, 2, 3, 4, 5].map((i) => (
-      <span key={i} className={i <= Math.round(rating) ? styles.starOn : styles.starOff}>
-        ★
-      </span>
+      <span key={i} className={i <= Math.round(rating) ? styles.starOn : styles.starOff}>★</span>
     ))}
   </span>
 )
@@ -55,7 +55,7 @@ const Body = () => {
   useScrollLock()
 
   const [salon, setSalon] = useState<string | undefined>(ctx.salon)
-  const [serviceId, setServiceId] = useState<number | undefined>(ctx.serviceId)
+  const [serviceIds, setServiceIds] = useState<number[]>(ctx.serviceId ? [ctx.serviceId] : [])
   const [staffId, setStaffId] = useState<number | undefined>(ctx.staffId)
   const [staffName, setStaffName] = useState(ctx.staffName ?? '')
   const [date, setDate] = useState('')
@@ -68,12 +68,13 @@ const Body = () => {
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [comment, setComment] = useState('')
-  const [agree1, setAgree1] = useState(true)
+  const [agree, setAgree] = useState(true)
   const [code, setCode] = useState('')
 
   const [step, setStep] = useState<Step>(
     !ctx.salon ? 'salon' : !ctx.serviceId ? 'service' : ctx.staffId === undefined ? 'master' : 'calendar'
   )
+  const [history, setHistory] = useState<Step[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -89,25 +90,49 @@ const Body = () => {
     return { y: d.getFullYear(), m: d.getMonth() }
   })
 
-  const service = useMemo(() => services.find((s) => s.id === serviceId), [services, serviceId])
+  const go = (next: Step) => {
+    setHistory((h) => [...h, step])
+    setStep(next)
+  }
+  const back = () =>
+    setHistory((h) => {
+      if (!h.length) return h
+      setStep(h[h.length - 1])
+      return h.slice(0, -1)
+    })
 
-  // Resolve services (for name/price) whenever a salon is set.
+  const selectedServices = useMemo(
+    () => services.filter((s) => serviceIds.includes(s.id)),
+    [services, serviceIds]
+  )
+  const total = useMemo(
+    () => selectedServices.reduce((a, s) => a + s.price_min, 0),
+    [selectedServices]
+  )
+  const toggleSvc = (id: number) =>
+    setServiceIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+
+  const [svcLoading, setSvcLoading] = useState(false)
+
+  // Services for name/price. When a master is chosen, only their services come back.
   useEffect(() => {
     if (!salon) return
     let cancel = false
-    call({ action: 'services', salon })
+    setSvcLoading(true)
+    call({ action: 'services', salon, staffId: staffId && staffId > 0 ? staffId : undefined })
       .then((d) => {
         if (cancel) return
         setCats(d.categories ?? [])
         setServices(d.services ?? [])
       })
       .catch(() => {})
-    return () => {
-      cancel = true
-    }
-  }, [salon])
+      .finally(() => {
+        if (!cancel) setSvcLoading(false)
+      })
+    return () => { cancel = true }
+  }, [salon, staffId])
 
-  // Load per-step data.
+  // Per-step data.
   useEffect(() => {
     let cancel = false
     const run = async () => {
@@ -115,15 +140,15 @@ const Body = () => {
       try {
         if (step === 'master' && salon) {
           setLoading(true)
-          const d = await call({ action: 'staff', salon, serviceId })
+          const d = await call({ action: 'staff', salon, serviceIds })
           if (!cancel) setStaff(d.staff ?? [])
-        } else if (step === 'calendar' && salon && serviceId != null) {
+        } else if (step === 'calendar' && salon && serviceIds.length) {
           setLoading(true)
-          const d = await call({ action: 'dates', salon, serviceId, staffId: staffId ?? 0 })
+          const d = await call({ action: 'dates', salon, serviceIds, staffId: staffId ?? 0 })
           if (!cancel) setDates(d.dates ?? [])
-        } else if (step === 'time' && salon && serviceId != null && date) {
+        } else if (step === 'time' && salon && serviceIds.length && date) {
           setLoading(true)
-          const d = await call({ action: 'times', salon, staffId: staffId ?? 0, date, serviceId })
+          const d = await call({ action: 'times', salon, staffId: staffId ?? 0, date, serviceIds })
           if (!cancel) setSlots(d.times ?? [])
         }
       } catch {
@@ -133,10 +158,8 @@ const Body = () => {
       }
     }
     run()
-    return () => {
-      cancel = true
-    }
-  }, [step, salon, serviceId, staffId, date])
+    return () => { cancel = true }
+  }, [step, salon, serviceIds, staffId, date])
 
   const catName = useMemo(() => new Map(cats.map((c) => [c.id, c.title])), [cats])
   const filteredServices = useMemo(() => {
@@ -147,7 +170,7 @@ const Body = () => {
   const dateSet = useMemo(() => new Set(dates), [dates])
   const monthGrid = useMemo(() => {
     const first = new Date(view.y, view.m, 1)
-    const startPad = (first.getDay() + 6) % 7 // Mon=0
+    const startPad = (first.getDay() + 6) % 7
     const days: (Date | null)[] = []
     for (let i = 0; i < startPad; i++) days.push(null)
     const dim = new Date(view.y, view.m + 1, 0).getDate()
@@ -159,10 +182,11 @@ const Body = () => {
   const phoneOk = digits.length === 11
   const close = () => setCtx({ open: false })
 
+  const afterService = () => go(staffId === undefined ? 'master' : 'calendar')
+
   const goNearest = () => {
     if (!dates.length) return
-    const first = dates[0]
-    const d = new Date(first + 'T00:00:00')
+    const d = new Date(dates[0] + 'T00:00:00')
     setView({ y: d.getFullYear(), m: d.getMonth() })
   }
 
@@ -175,7 +199,7 @@ const Body = () => {
     setError('')
     try {
       await call({ action: 'code', salon, phone: digits, fullname: `${surname} ${name}`.trim() })
-      setStep('code')
+      go('code')
     } catch {
       setError('Не удалось отправить код подтверждения. Проверьте телефон.')
     } finally {
@@ -199,7 +223,7 @@ const Body = () => {
         email,
         code: code.trim(),
         comment,
-        serviceId,
+        serviceIds,
         staffId: staffId ?? 0,
         datetime
       })
@@ -213,11 +237,10 @@ const Body = () => {
   }
 
   const salonMeta = SALONS.find((s) => s.key === salon)
-  const total = priceLabel(service)
 
   const titleFor: Record<Step, string> = {
     salon: 'Выберите салон',
-    service: 'Выберите услугу',
+    service: 'Выберите услуги',
     master: 'Выберите специалиста',
     calendar: 'Выберите дату',
     time: 'Выберите время',
@@ -229,6 +252,11 @@ const Body = () => {
   return (
     <div className={styles.overlay} onClick={close}>
       <div className={styles.modal} role="dialog" aria-modal="true" aria-label="Онлайн-запись" onClick={(e) => e.stopPropagation()}>
+        {history.length > 0 && step !== 'done' && (
+          <button type="button" className={styles.back} aria-label="Назад" onClick={back}>
+            <svg width="22" height="22" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          </button>
+        )}
         <button type="button" className={styles.close} aria-label="Закрыть" onClick={close}>
           <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -251,15 +279,7 @@ const Body = () => {
           {step === 'salon' && !loading && (
             <div className={styles.grid2}>
               {SALONS.map((s) => (
-                <button
-                  key={s.key}
-                  type="button"
-                  className={styles.pick}
-                  onClick={() => {
-                    setSalon(s.key)
-                    setStep(serviceId ? (staffId === undefined ? 'master' : 'calendar') : 'service')
-                  }}
-                >
+                <button key={s.key} type="button" className={styles.pick} onClick={() => { setSalon(s.key); go(serviceIds.length ? (staffId === undefined ? 'master' : 'calendar') : 'service') }}>
                   <span className={styles.pickName}>{s.label}</span>
                   <span className={styles.pickAddr}>{s.address}</span>
                 </button>
@@ -270,68 +290,43 @@ const Body = () => {
           {step === 'service' && !loading && (
             <>
               <input className={styles.search} placeholder="Поиск услуги" value={query} onChange={(e) => setQuery(e.target.value)} />
+              {svcLoading && <p className={styles.loading}>Загрузка услуг…</p>}
               <ul className={styles.list}>
-                {filteredServices.map((s) => (
-                  <li key={s.id}>
-                    <button
-                      type="button"
-                      className={styles.svcRow}
-                      onClick={() => {
-                        setServiceId(s.id)
-                        setStep(staffId === undefined ? 'master' : 'calendar')
-                      }}
-                    >
-                      <span className={styles.svcName}>
-                        {s.title}
-                        <span className={styles.svcCat}>{catName.get(s.category_id)}</span>
-                      </span>
-                      <span className={styles.svcPrice}>{priceLabel(s)}</span>
-                    </button>
-                  </li>
-                ))}
+                {filteredServices.map((s) => {
+                  const on = serviceIds.includes(s.id)
+                  return (
+                    <li key={s.id}>
+                      <button type="button" className={styles.svcRow} onClick={() => toggleSvc(s.id)}>
+                        <span className={classNames(styles.check, { [styles.checkOn]: on })} aria-hidden="true" />
+                        <span className={styles.svcName}>
+                          {s.title}
+                          <span className={styles.svcCat}>{catName.get(s.category_id)}</span>
+                        </span>
+                        <span className={styles.svcPrice}>{priceLabel(s)}</span>
+                      </button>
+                    </li>
+                  )
+                })}
               </ul>
             </>
           )}
 
           {step === 'master' && !loading && (
             <div className={styles.masters}>
-              <button
-                type="button"
-                className={styles.masterAny}
-                onClick={() => {
-                  setStaffId(0)
-                  setStaffName('Любой специалист')
-                  setStep('calendar')
-                }}
-              >
+              <button type="button" className={styles.masterAny} onClick={() => { setStaffId(0); setStaffName('Любой специалист'); go('calendar') }}>
                 Любой специалист
               </button>
               {staff.map((m) => (
-                <button
-                  key={m.id}
-                  type="button"
-                  className={styles.masterRow}
-                  onClick={() => {
-                    setStaffId(m.id)
-                    setStaffName(m.name)
-                    setStep('calendar')
-                  }}
-                >
+                <button key={m.id} type="button" className={styles.masterRow} onClick={() => { setStaffId(m.id); setStaffName(m.name); go('calendar') }}>
                   <span className={styles.masterAv}>
-                    {m.avatar && (
-                      // eslint-disable-next-line @next/next/no-img-element -- remote avatar in a modal
-                      <img src={m.avatar} alt={m.name} />
-                    )}
+                    {/* eslint-disable-next-line @next/next/no-img-element -- remote avatar in a modal */}
+                    {m.avatar && <img src={m.avatar} alt={m.name} />}
                   </span>
                   <span className={styles.masterInfo}>
                     <span className={styles.masterName}>{m.name}</span>
                     {m.specialization && <span className={styles.masterSpec}>{m.specialization}</span>}
-                    {m.votes > 0 && (
-                      <span className={styles.masterRate}>
-                        <Stars rating={m.rating} /> {m.votes}
-                      </span>
-                    )}
-                    {service && <span className={styles.masterPrice}>{priceLabel(service)}</span>}
+                    {m.votes > 0 && <span className={styles.masterRate}><Stars rating={m.rating} /> {m.votes}</span>}
+                    {total > 0 && <span className={styles.masterPrice}>{rub(total)}</span>}
                   </span>
                   <span className={styles.radio} aria-hidden="true" />
                 </button>
@@ -346,25 +341,14 @@ const Body = () => {
                 <span className={styles.calMonth}>{MONTHS[view.m]} {view.y}</span>
                 <button type="button" className={styles.calNav} aria-label="Следующий месяц" onClick={() => setView((v) => (v.m === 11 ? { y: v.y + 1, m: 0 } : { y: v.y, m: v.m + 1 }))}>›</button>
               </div>
-              <div className={styles.calWd}>
-                {WD.map((w) => <span key={w}>{w}</span>)}
-              </div>
+              <div className={styles.calWd}>{WD.map((w) => <span key={w}>{w}</span>)}</div>
               <div className={styles.calGrid}>
                 {monthGrid.map((d, i) => {
                   if (!d) return <span key={i} />
                   const key = iso(d)
                   const free = dateSet.has(key)
                   return (
-                    <button
-                      key={i}
-                      type="button"
-                      disabled={!free}
-                      className={free ? styles.calDayFree : styles.calDay}
-                      onClick={() => {
-                        setDate(key)
-                        setStep('time')
-                      }}
-                    >
+                    <button key={i} type="button" disabled={!free} className={free ? styles.calDayFree : styles.calDay} onClick={() => { setDate(key); go('time') }}>
                       {d.getDate()}
                     </button>
                   )
@@ -373,9 +357,7 @@ const Body = () => {
               {dates.length > 0 && !monthGrid.some((d) => d && dateSet.has(iso(d))) && (
                 <div className={styles.calEmpty}>
                   <p>В этом месяце нет свободного времени.</p>
-                  <button type="button" className={styles.primary} onClick={goNearest}>
-                    Перейти к ближайшей дате
-                  </button>
+                  <button type="button" className={styles.primary} onClick={goNearest}>Перейти к ближайшей дате</button>
                 </div>
               )}
               {dates.length === 0 && <p className={styles.loading}>Нет свободных дат.</p>}
@@ -386,16 +368,7 @@ const Body = () => {
             <div className={styles.chips}>
               {slots.length === 0 && <p className={styles.loading}>На эту дату нет свободного времени.</p>}
               {slots.map((t) => (
-                <button
-                  key={t.datetime}
-                  type="button"
-                  className={styles.chip}
-                  onClick={() => {
-                    setDatetime(t.datetime)
-                    setTimeLabel(t.time)
-                    setStep('details')
-                  }}
-                >
+                <button key={t.datetime} type="button" className={styles.chip} onClick={() => { setDatetime(t.datetime); setTimeLabel(t.time); go('details') }}>
                   {t.time}
                 </button>
               ))}
@@ -405,26 +378,15 @@ const Body = () => {
           {step === 'details' && (
             <div className={styles.details}>
               <div className={styles.summary}>
-                {staffName && (
-                  <div className={styles.sumRow}>
-                    <span>{staffName}</span>
+                {staffName && <div className={styles.sumRow}><span>{staffName}</span></div>}
+                {date && <div className={styles.sumRow}><span>{prettyDate(date)}, {timeLabel}</span></div>}
+                {selectedServices.map((s) => (
+                  <div key={s.id} className={styles.sumRow}>
+                    <span>{s.title}</span>
+                    <span className={styles.sumPrice}>{priceLabel(s)}</span>
                   </div>
-                )}
-                {date && (
-                  <div className={styles.sumRow}>
-                    <span>{prettyDate(date)}, {timeLabel}</span>
-                  </div>
-                )}
-                {service && (
-                  <div className={styles.sumRow}>
-                    <span>{service.title}</span>
-                    <span className={styles.sumPrice}>{priceLabel(service)}</span>
-                  </div>
-                )}
-                <div className={styles.sumTotal}>
-                  <span>Итого</span>
-                  <span>{total}</span>
-                </div>
+                ))}
+                <div className={styles.sumTotal}><span>Итого</span><span>{rub(total)}</span></div>
               </div>
 
               <div className={styles.form}>
@@ -436,16 +398,11 @@ const Body = () => {
                 <textarea className={styles.textarea} placeholder="Комментарий к записи" value={comment} onChange={(e) => setComment(e.target.value)} />
 
                 <label className={styles.consent}>
-                  <input type="checkbox" checked={agree1} onChange={(e) => setAgree1(e.target.checked)} />
-                  <span>
-                    Я даю согласие на обработку персональных данных и принимаю{' '}
-                    <a href="/privacy" target="_blank">Политику конфиденциальности</a>.
-                  </span>
+                  <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
+                  <span>Я даю согласие на обработку персональных данных и принимаю <a href="/privacy" target="_blank">Политику конфиденциальности</a>.</span>
                 </label>
 
-                <button type="button" className={styles.primary} disabled={loading || !agree1} onClick={submitDetails}>
-                  Записаться
-                </button>
+                <button type="button" className={styles.primary} disabled={loading || !agree} onClick={submitDetails}>Записаться</button>
               </div>
             </div>
           )}
@@ -454,9 +411,7 @@ const Body = () => {
             <div className={styles.form}>
               <p className={styles.hint}>Мы отправили код подтверждения на {phone}.</p>
               <input className={styles.input} placeholder="Код из СМС" inputMode="numeric" value={code} onChange={(e) => setCode(e.target.value)} />
-              <button type="button" className={styles.primary} disabled={loading} onClick={submitCode}>
-                Подтвердить запись
-              </button>
+              <button type="button" className={styles.primary} disabled={loading} onClick={submitCode}>Подтвердить запись</button>
             </div>
           )}
 
@@ -467,6 +422,14 @@ const Body = () => {
             </div>
           )}
         </div>
+
+        {step === 'service' && (
+          <div className={styles.footer}>
+            <button type="button" className={styles.primary} disabled={!serviceIds.length} onClick={afterService}>
+              {serviceIds.length ? `Продолжить · ${serviceIds.length} усл. · ${rub(total)}` : 'Выберите услуги'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
