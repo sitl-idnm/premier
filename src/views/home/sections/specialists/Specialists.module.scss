@@ -37,6 +37,46 @@
   @include mixins.section-title;
 }
 
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  @include mixins.mobile {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.arrows {
+  display: flex;
+  gap: 8px;
+
+  @include mixins.mobile {
+    display: none;
+  }
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--gray-stroke);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color 0.16s ease,
+    color 0.16s ease;
+
+  &:hover {
+    border-color: var(--green-main);
+    color: var(--green-main);
+  }
+}
+
 /* Salon switch with sliding highlight. */
 .switch {
   position: relative;
@@ -84,14 +124,20 @@
   color: var(--white);
 }
 
-/* Horizontal carousel. */
+/* Horizontal carousel (drag + arrows). */
 .track {
   display: flex;
   gap: 20px;
   overflow-x: auto;
   padding-bottom: 6px;
-  scroll-snap-type: x mandatory;
   scrollbar-width: none;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
 
   &::-webkit-scrollbar {
     display: none;

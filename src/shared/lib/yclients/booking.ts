@@ -19,6 +19,8 @@ export type BookStaff = {
   name: string
   specialization: string
   avatar: string
+  rating: number
+  votes: number
 }
 export type BookTime = { time: string; datetime: string; seance_length?: number }
 
@@ -30,6 +32,8 @@ type RawStaff = {
   avatar?: string
   avatar_big?: string
   bookable?: boolean
+  rating?: number
+  votes_count?: number
 }
 
 const FRESH = 60 // availability changes often → short cache
@@ -62,7 +66,9 @@ export async function bookStaff(
       id: s.id,
       name: s.name,
       specialization: s.specialization || s.position?.title || '',
-      avatar: s.avatar_big || s.avatar || ''
+      avatar: s.avatar_big || s.avatar || '',
+      rating: s.rating ?? 0,
+      votes: s.votes_count ?? 0
     }))
 }
 
