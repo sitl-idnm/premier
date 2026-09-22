@@ -26,6 +26,11 @@ const nextConfig = {
   },
   images: {
     unoptimized: false,
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      // YClients master avatars
+      { protocol: 'https', hostname: 'assets.yclients.com' }
+    ]
   }
 };
 

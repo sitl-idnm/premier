@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import Image from 'next/image'
 import { type SiteContent } from '@/shared/content'
 import { nbp } from '@/shared/lib/typography'
 
@@ -10,21 +11,28 @@ const Hero: FC<{ data: SiteContent['hero'] }> = ({ data }) => {
     <section className={styles.root} id="hero">
       {/* Desktop / tablet — scaled 1200×508 canvas (matches Figma exactly) */}
       <div className={styles.canvas}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- decorative ornament, cqw-positioned */}
         <img
           src="/images/hero-ornament.png"
           alt=""
           aria-hidden="true"
           className={styles.ornament}
         />
-        <img
+        <Image
           src="/images/hero-main.png"
           alt="Мастер салона «Премьер»"
+          width={2560}
+          height={1920}
+          priority
+          sizes="570px"
           className={styles.photoMain}
         />
-        <img
+        <Image
           src="/images/hero-small.png"
           alt=""
-          aria-hidden="true"
+          width={1280}
+          height={960}
+          sizes="180px"
           className={styles.photoSmall}
         />
         <p className={styles.eyebrow}>{nbp(data.eyebrow)}</p>
@@ -45,9 +53,13 @@ const Hero: FC<{ data: SiteContent['hero'] }> = ({ data }) => {
 
       {/* Mobile — vertical stack (Figma mobile frame) */}
       <div className={styles.mobile}>
-        <img
+        <Image
           src="/images/hero-main.png"
           alt="Мастер салона «Премьер»"
+          width={2560}
+          height={1920}
+          priority
+          sizes="100vw"
           className={styles.mPhoto}
         />
         <p className={styles.mEyebrow}>{nbp(data.eyebrow)}</p>

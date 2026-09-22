@@ -1,6 +1,7 @@
 'use client'
 
 import { FC } from 'react'
+import Image from 'next/image'
 import { BOOKING_URL } from '@/shared/const/yclients'
 import { GOALS, ymGoal } from '@/shared/lib/metrika'
 
@@ -28,7 +29,14 @@ export const HeroCard: FC<HeroCardProps> = ({ badge, title, sub, btn }) => {
         {badge}
       </span>
 
-      <img src="/images/hero-discount.png" alt="" className={styles.photo} />
+      <Image
+        src="/images/hero-discount.png"
+        alt=""
+        width={1280}
+        height={960}
+        sizes="160px"
+        className={styles.photo}
+      />
 
       <div className={styles.info}>
         <p className={styles.text}>

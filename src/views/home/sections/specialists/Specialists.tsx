@@ -1,6 +1,7 @@
 'use client'
 
 import { FC, useMemo, useState } from 'react'
+import Image from 'next/image'
 import classNames from 'classnames'
 import { type SalonStaff } from '@/shared/lib/yclients/catalog'
 
@@ -54,7 +55,13 @@ const Specialists: FC<{ salons: SalonStaff[] }> = ({ salons }) => {
             <article key={m.id} className={styles.card}>
               <div className={styles.photoBox}>
                 {m.avatar ? (
-                  <img src={m.avatar} alt={m.name} className={styles.photo} />
+                  <Image
+                    src={m.avatar}
+                    alt={m.name}
+                    fill
+                    sizes="(max-width: 560px) 45vw, (max-width: 900px) 30vw, 260px"
+                    className={styles.photo}
+                  />
                 ) : (
                   <span className={styles.photoStub} aria-hidden="true" />
                 )}

@@ -1,4 +1,5 @@
 import { FC, Fragment } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { type SiteContent } from '@/shared/content'
 import { nbp } from '@/shared/lib/typography'
@@ -19,6 +20,7 @@ const Salons: FC<{ data: SiteContent['salons'] }> = ({ data }) => {
             <article key={item.metro} className={styles.card}>
               <div className={styles.body}>
                 <span className={styles.badge}>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- decorative vector, no optimization needed */}
                   <img src="/icons/metro.svg" alt="" className={styles.pin} />
                   {item.metro}
                 </span>
@@ -35,7 +37,14 @@ const Salons: FC<{ data: SiteContent['salons'] }> = ({ data }) => {
                   {data.btnLabel}
                 </Link>
               </div>
-              <img src={item.photo} alt="" className={styles.photo} />
+              <Image
+                src={item.photo}
+                alt=""
+                width={1667}
+                height={2500}
+                sizes="(max-width: 900px) 100vw, 300px"
+                className={styles.photo}
+              />
             </article>
           ))}
         </div>

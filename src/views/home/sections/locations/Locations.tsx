@@ -63,6 +63,7 @@ const Locations: FC<{ data: SiteContent['locations'] }> = ({ data }) => {
               />
 
               <span className={styles.badge}>
+                {/* eslint-disable-next-line @next/next/no-img-element -- decorative vector */}
                 <img src="/icons/metro.svg" alt="" className={styles.pin} />
                 {item.metro}
               </span>

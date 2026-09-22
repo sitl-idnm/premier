@@ -1,6 +1,7 @@
 'use client'
 
 import { FC, useEffect, useState } from 'react'
+import Image from 'next/image'
 import classNames from 'classnames'
 
 import styles from './AboutGallery.module.scss'
@@ -21,6 +22,7 @@ export const AboutGallery: FC<{ photos: string[] }> = ({ photos }) => {
 
   return (
     <div className={styles.gallery}>
+      {/* eslint-disable-next-line @next/next/no-img-element -- decorative vector «mirror» cloud */}
       <img
         src="/icons/about-cloud.svg"
         alt=""
@@ -30,10 +32,12 @@ export const AboutGallery: FC<{ photos: string[] }> = ({ photos }) => {
 
       <div className={styles.stage}>
         {photos.map((src, i) => (
-          <img
+          <Image
             key={src}
             src={src}
             alt="Интерьер салона «Премьер»"
+            fill
+            sizes="(max-width: 900px) 60vw, 340px"
             className={classNames(styles.photo, {
               [styles.active]: i === active
             })}

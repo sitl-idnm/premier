@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { type SiteContent } from '@/shared/content'
 import { BOOKING_URL } from '@/shared/const/yclients'
@@ -9,6 +10,7 @@ import styles from './Promos.module.scss'
 const Promos: FC<{ data: SiteContent['promos'] }> = ({ data }) => {
   return (
     <section className={styles.root} id="promos">
+      {/* eslint-disable-next-line @next/next/no-img-element -- decorative vector background */}
       <img
         src="/images/promos-bg.svg"
         alt=""
@@ -25,9 +27,12 @@ const Promos: FC<{ data: SiteContent['promos'] }> = ({ data }) => {
         <div className={styles.grid}>
           {data.items.map((item, i) => (
             <article key={i} className={styles.card}>
-              <img
+              <Image
                 src={item.photo}
                 alt=""
+                width={374}
+                height={373}
+                sizes="(max-width: 900px) 100vw, 380px"
                 className={styles.photo}
               />
               <h3 className={styles.cardTitle}>{nbp(item.title)}</h3>
@@ -44,10 +49,11 @@ const Promos: FC<{ data: SiteContent['promos'] }> = ({ data }) => {
           ))}
 
           <article className={styles.glass}>
-            <img
+            <Image
               src="/images/promo-deco.png"
               alt=""
-              aria-hidden="true"
+              width={164}
+              height={164}
               className={styles.deco}
             />
             <Link href={data.allHref} className={styles.allLink}>

@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import Image from 'next/image'
 import { CtaButton } from '@/components/cta/CtaButton'
 import { type SiteContent } from '@/shared/content'
 import { BOOKING_URL } from '@/shared/const/yclients'
@@ -14,18 +15,45 @@ const Portfolio: FC<{ data: SiteContent['portfolio'] }> = ({ data }) => {
       </div>
 
       <div className={styles.gallery}>
-        <img src="/images/portfolio-1.png" alt="Работа мастера" className={styles.photo} />
-        <img src="/images/portfolio-2.png" alt="Работа мастера" className={styles.photo} />
+        <Image
+          src="/images/portfolio-1.png"
+          alt="Работа мастера"
+          width={1655}
+          height={2500}
+          sizes="(max-width: 900px) 300px, 25vw"
+          className={styles.photo}
+        />
+        <Image
+          src="/images/portfolio-2.png"
+          alt="Работа мастера"
+          width={1080}
+          height={1350}
+          sizes="(max-width: 900px) 300px, 25vw"
+          className={styles.photo}
+        />
 
         <div className={styles.cta}>
-          <img src="/images/portfolio-cta.png" alt="" className={styles.ctaImg} />
+          <Image
+            src="/images/portfolio-cta.png"
+            alt=""
+            width={220}
+            height={220}
+            className={styles.ctaImg}
+          />
           <p className={styles.ctaText}>{nbp(data.ctaText)}</p>
           <CtaButton href={BOOKING_URL} place="portfolio">
             {data.ctaBtn}
           </CtaButton>
         </div>
 
-        <img src="/images/portfolio-3.png" alt="Работа мастера" className={styles.photo} />
+        <Image
+          src="/images/portfolio-3.png"
+          alt="Работа мастера"
+          width={1080}
+          height={1350}
+          sizes="(max-width: 900px) 300px, 25vw"
+          className={styles.photo}
+        />
       </div>
     </section>
   )

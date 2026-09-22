@@ -105,6 +105,7 @@
 }
 
 .photoBox {
+  position: relative;
   overflow: hidden;
   aspect-ratio: 3 / 4;
   border-radius: var(--radius-card);

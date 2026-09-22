@@ -49,6 +49,7 @@ export const Envelope: FC = () => {
 
   return (
     <div ref={stageRef} className={styles.stage} aria-hidden="true">
+      {/* eslint-disable @next/next/no-img-element -- GSAP-animated layers / vectors need the raw <img> */}
       <img src="/images/envelope-back.svg" alt="" className={styles.back} />
       <img
         ref={photoRef}
@@ -57,6 +58,7 @@ export const Envelope: FC = () => {
         className={styles.photo}
       />
       <img src="/icons/envelope-front.svg" alt="" className={styles.front} />
+      {/* eslint-enable @next/next/no-img-element */}
     </div>
   )
 }
