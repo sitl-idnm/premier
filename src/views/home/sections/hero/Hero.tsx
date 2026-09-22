@@ -53,13 +53,10 @@ const Hero: FC<{ data: SiteContent['hero'] }> = ({ data }) => {
 
       {/* Mobile — vertical stack (Figma mobile frame) */}
       <div className={styles.mobile}>
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element -- mobile hero uses CSS aspect-ratio sizing */}
+        <img
           src="/images/hero-main.png"
           alt="Мастер салона «Премьер»"
-          width={2560}
-          height={1920}
-          priority
-          sizes="100vw"
           className={styles.mPhoto}
         />
         <p className={styles.mEyebrow}>{nbp(data.eyebrow)}</p>

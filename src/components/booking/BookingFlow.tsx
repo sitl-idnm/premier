@@ -84,6 +84,7 @@ const Body = () => {
   const [dates, setDates] = useState<string[]>([])
   const [slots, setSlots] = useState<Slot[]>([])
   const [query, setQuery] = useState('')
+  const [openCats, setOpenCats] = useState<Set<number>>(new Set())
 
   const [view, setView] = useState(() => {
     const d = new Date()
@@ -161,11 +162,50 @@ const Body = () => {
     return () => { cancel = true }
   }, [step, salon, serviceIds, staffId, date])
 
-  const catName = useMemo(() => new Map(cats.map((c) => [c.id, c.title])), [cats])
   const filteredServices = useMemo(() => {
     const q = query.trim().toLowerCase()
     return q ? services.filter((s) => s.title.toLowerCase().includes(q)) : services
   }, [services, query])
+
+  // Services grouped by category for the collapsible service picker.
+  const grouped = useMemo(() => {
+    const map = new Map<number, Svc[]>()
+    for (const s of services) {
+      const arr = map.get(s.category_id) ?? []
+      arr.push(s)
+      map.set(s.category_id, arr)
+    }
+    const known = cats.filter((c) => map.has(c.id)).map((c) => ({ cat: c, items: map.get(c.id)! }))
+    const seen = new Set(cats.map((c) => c.id))
+    const orphans = Array.from(map.entries()).filter(([id]) => !seen.has(id))
+    if (orphans.length)
+      known.push({
+        cat: { id: -1, title: 'Другое' },
+        items: orphans.flatMap(([, v]) => v)
+      })
+    return known
+  }, [services, cats])
+
+  const toggleCat = (id: number) =>
+    setOpenCats((prev) => {
+      const n = new Set(prev)
+      if (n.has(id)) n.delete(id)
+      else n.add(id)
+      return n
+    })
+
+  const svcRow = (s: Svc) => {
+    const on = serviceIds.includes(s.id)
+    return (
+      <li key={s.id}>
+        <button type="button" className={styles.svcRow} onClick={() => toggleSvc(s.id)}>
+          <span className={classNames(styles.check, { [styles.checkOn]: on })} aria-hidden="true" />
+          <span className={styles.svcName}>{s.title}</span>
+          <span className={styles.svcPrice}>{priceLabel(s)}</span>
+        </button>
+      </li>
+    )
+  }
 
   const dateSet = useMemo(() => new Set(dates), [dates])
   const monthGrid = useMemo(() => {
@@ -291,23 +331,30 @@ const Body = () => {
             <>
               <input className={styles.search} placeholder="Поиск услуги" value={query} onChange={(e) => setQuery(e.target.value)} />
               {svcLoading && <p className={styles.loading}>Загрузка услуг…</p>}
-              <ul className={styles.list}>
-                {filteredServices.map((s) => {
-                  const on = serviceIds.includes(s.id)
-                  return (
-                    <li key={s.id}>
-                      <button type="button" className={styles.svcRow} onClick={() => toggleSvc(s.id)}>
-                        <span className={classNames(styles.check, { [styles.checkOn]: on })} aria-hidden="true" />
-                        <span className={styles.svcName}>
-                          {s.title}
-                          <span className={styles.svcCat}>{catName.get(s.category_id)}</span>
-                        </span>
-                        <span className={styles.svcPrice}>{priceLabel(s)}</span>
-                      </button>
-                    </li>
-                  )
-                })}
-              </ul>
+
+              {query ? (
+                <ul className={styles.list}>{filteredServices.map(svcRow)}</ul>
+              ) : (
+                <div className={styles.cats}>
+                  {grouped.map((g) => {
+                    const open = openCats.has(g.cat.id)
+                    const sel = g.items.filter((s) => serviceIds.includes(s.id)).length
+                    return (
+                      <div key={g.cat.id} className={styles.cat}>
+                        <button type="button" className={styles.catHead} aria-expanded={open} onClick={() => toggleCat(g.cat.id)}>
+                          <span className={styles.catTitle}>{g.cat.title}</span>
+                          <span className={styles.catMeta}>
+                            {sel > 0 && <span className={styles.catSel}>{sel}</span>}
+                            <span className={styles.catCount}>{g.items.length}</span>
+                            <span className={classNames(styles.chev, { [styles.chevOpen]: open })} aria-hidden="true" />
+                          </span>
+                        </button>
+                        {open && <ul className={styles.list}>{g.items.map(svcRow)}</ul>}
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </>
           )}
 

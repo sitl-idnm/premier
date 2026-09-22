@@ -11,8 +11,7 @@
   background: rgba(51, 51, 51, 0.55);
 
   @include mixins.mobile {
-    padding: 0;
-    align-items: flex-end;
+    padding: 12px;
   }
 }
 
@@ -29,9 +28,9 @@
 
   @include mixins.mobile {
     max-width: none;
-    max-height: 94vh;
+    max-height: 88vh;
     padding: 50px 16px 16px;
-    border-radius: 22px 22px 0 0;
+    border-radius: 22px;
   }
 }
 
@@ -630,4 +629,83 @@
   font-size: 18px;
   line-height: 1.4;
   color: var(--text-primary);
+}
+
+/* Collapsible service categories (service step). */
+.cats {
+  display: flex;
+  flex-direction: column;
+}
+
+.cat {
+  border-bottom: 1px solid var(--gray-stroke);
+
+  &:first-child {
+    border-top: 1px solid var(--gray-stroke);
+  }
+}
+
+.catHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.catTitle {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.catMeta {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.catSel {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: var(--green-main);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.catCount {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  color: var(--gray-text);
+}
+
+.chev {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--gray-text);
+  border-bottom: 2px solid var(--gray-text);
+  transform: rotate(45deg) translate(-1px, -1px);
+  transition: transform 0.24s ease;
+}
+
+.chevOpen {
+  transform: rotate(-135deg) translate(-1px, -1px);
+}
+
+/* Service rows sit flush inside an open category. */
+.cat .list .svcRow {
+  padding-left: 4px;
 }
