@@ -573,3 +573,19 @@
   line-height: 1.4;
   color: var(--gray-text);
 }
+
+/* Rows that map to a bookable YClients service. */
+.clickable {
+  cursor: pointer;
+  transition:
+    background-color 0.14s ease,
+    color 0.14s ease;
+
+  &:hover {
+    background: var(--beige);
+
+    .name {
+      color: var(--green-main);
+    }
+  }
+}

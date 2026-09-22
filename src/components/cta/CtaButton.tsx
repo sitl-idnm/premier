@@ -1,16 +1,17 @@
 'use client'
 
 import { FC, ReactNode } from 'react'
-import { modalAtom, ModalId } from '@/shared/atoms/modalAtom'
+import { bookingAtom } from '@/shared/atoms/bookingAtom'
 import { GOALS, ymGoal } from '@/shared/lib/metrika'
 import { Button } from '@ui/button'
 import { useSetAtom } from 'jotai'
 
 type CtaButtonProps = {
-  /** External link (YClients booking / certificates) — opens in a new tab. */
+  /** External link (e.g. certificates) — opens in a new tab. */
   href?: string
-  /** Fallback: open a global modal when no href is given. */
-  modal?: Exclude<ModalId, null>
+  /** Open the custom booking flow (optionally pre-selecting a salon). */
+  booking?: boolean
+  salon?: string
   variant?: 'orange' | 'light'
   bordered?: boolean
   block?: boolean
@@ -19,17 +20,18 @@ type CtaButtonProps = {
   children: ReactNode
 }
 
-/** Client CTA: links out to YClients (href) or opens a modal. Server-safe. */
+/** Client CTA: opens booking flow, links out (href), or both. Server-safe. */
 export const CtaButton: FC<CtaButtonProps> = ({
   href,
-  modal,
+  booking,
+  salon,
   variant = 'orange',
   bordered,
   block,
   place,
   children
 }) => {
-  const setModal = useSetAtom(modalAtom)
+  const openBooking = useSetAtom(bookingAtom)
 
   if (href) {
     return (
@@ -50,7 +52,7 @@ export const CtaButton: FC<CtaButtonProps> = ({
 
   const open = () => {
     ymGoal(GOALS.openBooking, place ? { place } : undefined)
-    if (modal) setModal(modal)
+    if (booking) openBooking({ open: true, salon })
   }
 
   return (

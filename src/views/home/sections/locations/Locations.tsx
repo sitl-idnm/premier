@@ -4,7 +4,6 @@ import { FC, useState } from 'react'
 import classNames from 'classnames'
 import { CtaButton } from '@/components/cta/CtaButton'
 import { type SiteContent } from '@/shared/content'
-import { BOOKING_URL } from '@/shared/const/yclients'
 import { GOALS, ymGoal } from '@/shared/lib/metrika'
 import { nbp } from '@/shared/lib/typography'
 
@@ -79,7 +78,13 @@ const Locations: FC<{ data: SiteContent['locations'] }> = ({ data }) => {
               <p className={styles.hours}>{nbp(item.hours)}</p>
 
               <div className={styles.btn}>
-                <CtaButton href={BOOKING_URL} place="locations">
+                <CtaButton
+                  booking
+                  salon={
+                    item.metro === 'Таганская' ? 'taganskaya' : 'novoslobodskaya'
+                  }
+                  place="locations"
+                >
                   {data.btnLabel}
                 </CtaButton>
               </div>

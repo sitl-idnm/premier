@@ -2,9 +2,11 @@
 
 import { FC, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames'
+import { bookingAtom } from '@/shared/atoms/bookingAtom'
 import { type SiteContent } from '@/shared/content'
 import { GOALS, ymGoal } from '@/shared/lib/metrika'
 import { nbp } from '@/shared/lib/typography'
+import { useSetAtom } from 'jotai'
 
 import styles from './Prices.module.scss'
 
@@ -16,6 +18,7 @@ const formatPrice = (v: string) =>
   v.replace(/ /g, '\u00A0').replace(/([/\u2013\u2014-])\u00A0/g, '$1 ')
 
 type FlatRow = {
+  id?: number
   name: string
   desc?: string
   values: string[]
@@ -56,6 +59,7 @@ const Prices: FC<{ data: SiteContent['prices'] }> = ({ data }) => {
       salon.tabs.flatMap((t) =>
         t.sections.flatMap((s) =>
           s.rows.map((r) => ({
+            id: r.id,
             name: r.name,
             desc: r.desc,
             values: r.values,
@@ -143,8 +147,21 @@ const Prices: FC<{ data: SiteContent['prices'] }> = ({ data }) => {
 
   const activeSalonIndex = data.salons.findIndex((s) => s.key === salon.key)
 
+  const openBooking = useSetAtom(bookingAtom)
+  const bookService = (id: number | undefined, serviceName: string) => {
+    if (id == null) return
+    ymGoal(GOALS.openBooking, { place: 'price', service: serviceName })
+    openBooking({ open: true, salon: salon.key, serviceId: id, serviceName })
+  }
+
   const renderResultRow = (r: FlatRow, i: number) => (
-    <div key={`${r.name}-${i}`} className={styles.resultRow}>
+    <div
+      key={`${r.name}-${i}`}
+      className={classNames(styles.resultRow, {
+        [styles.clickable]: r.id != null
+      })}
+      onClick={() => bookService(r.id, r.name)}
+    >
       <div className={styles.resultInfo}>
         <span className={styles.name}>{nbp(r.name)}</span>
         <span className={styles.resultCrumb}>
@@ -329,7 +346,10 @@ const Prices: FC<{ data: SiteContent['prices'] }> = ({ data }) => {
                           {section.rows.map((row, ri) => (
                             <div
                               key={ri}
-                              className={classNames(styles.row, gridClass)}
+                              className={classNames(styles.row, gridClass, {
+                                [styles.clickable]: row.id != null
+                              })}
+                              onClick={() => bookService(row.id, row.name)}
                             >
                               <div className={styles.cellName}>
                                 <span className={styles.name}>{nbp(row.name)}</span>

@@ -1,8 +1,8 @@
 import { FC } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { BookNow } from '@/components/booking/BookNow'
 import { type SiteContent } from '@/shared/content'
-import { BOOKING_URL } from '@/shared/const/yclients'
 import { nbp } from '@/shared/lib/typography'
 
 import styles from './Promos.module.scss'
@@ -37,14 +37,7 @@ const Promos: FC<{ data: SiteContent['promos'] }> = ({ data }) => {
               />
               <h3 className={styles.cardTitle}>{nbp(item.title)}</h3>
               <p className={styles.cardDesc}>{nbp(item.desc)}</p>
-              <a
-                className={styles.cardBtn}
-                href={BOOKING_URL}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {data.btnLabel}
-              </a>
+              <BookNow className={styles.cardBtn}>{data.btnLabel}</BookNow>
             </article>
           ))}
 

@@ -4,7 +4,13 @@
  * A section has its own price columns (1–3), optional title and footnote; a row may
  * carry a description line. Values are kept verbatim (ranges/«от» included).
  */
-export type PriceRow = { name: string; desc?: string; values: string[] }
+export type PriceRow = {
+  name: string
+  desc?: string
+  values: string[]
+  /** YClients service id — present only for live catalog; enables click-to-book. */
+  id?: number
+}
 export type PriceSection = {
   title?: string
   note?: string

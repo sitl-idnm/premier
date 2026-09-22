@@ -41,8 +41,18 @@ export type Specialist = {
   name: string
   specialization: string
   avatar: string
+  /** Plain-text bio (YClients `information`, HTML stripped). */
+  info: string
 }
 export type SalonStaff = { key: string; label: string; list: Specialist[] }
+
+const stripHtml = (html: string) =>
+  html
+    .replace(/<\/(p|div|li|br)>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/\n{2,}/g, '\n')
+    .trim()
 
 const CACHE = 3600 // services/staff change rarely → cache 1h
 
@@ -78,7 +88,11 @@ function servicesToTabs(cats: YcCategory[], svcs: YcService[]): PriceTab[] {
   const rows = (list: YcService[]): PriceRow[] =>
     list
       .sort((a, b) => a.title.localeCompare(b.title, 'ru'))
-      .map((s) => ({ name: s.title, values: [price(s.price_min, s.price_max)] }))
+      .map((s) => ({
+        id: s.id,
+        name: s.title,
+        values: [price(s.price_min, s.price_max)]
+      }))
 
   const tabs: PriceTab[] = []
   for (const root of roots) {
@@ -145,7 +159,8 @@ export async function getSpecialists(): Promise<SalonStaff[]> {
             id: s.id,
             name: s.name,
             specialization: s.specialization || s.position?.title || '',
-            avatar: s.avatar_big || s.avatar || ''
+            avatar: s.avatar_big || s.avatar || '',
+            info: s.information ? stripHtml(s.information) : ''
           }))
         return { key, label: SALON_LABELS[key] ?? key, list }
       } catch {

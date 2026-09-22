@@ -6,6 +6,7 @@ import { Header } from '@modules/header'
 
 import { UtmCapture } from '@/components/analytics/UtmCapture'
 import { YandexMetrika } from '@/components/analytics/YandexMetrika'
+import { BookingFlow } from '@/components/booking/BookingFlow'
 import { CookieBanner } from '@/components/cookie/CookieBanner'
 import { ModalHost } from '@/components/modal/ModalHost'
 import { ScrollTop } from '@/components/scroll-top/ScrollTop'
@@ -68,6 +69,7 @@ export default async function SiteLayout({
       />
       <CookieBanner />
       <ScrollTop />
+      <BookingFlow />
       <div id="modal-root" />
     </>
   )

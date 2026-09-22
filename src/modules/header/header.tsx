@@ -2,12 +2,13 @@
 
 import { FC, useState } from 'react'
 import Link from 'next/link'
+import { bookingAtom } from '@/shared/atoms/bookingAtom'
 import { type SiteContent } from '@/shared/content/defaults'
-import { BOOKING_URL } from '@/shared/const/yclients'
 import { GOALS, ymGoal } from '@/shared/lib/metrika'
 import { nbp } from '@/shared/lib/typography'
 import { Logo } from '@ui/logo'
 import classNames from 'classnames'
+import { useSetAtom } from 'jotai'
 
 import styles from './header.module.scss'
 
@@ -18,10 +19,12 @@ type HeaderProps = {
 
 const Header: FC<HeaderProps> = ({ header }) => {
   const [menuOpen, setMenuOpen] = useState(false)
+  const openBooking = useSetAtom(bookingAtom)
   const navLinks = header.nav
 
   const onBook = () => {
     ymGoal(GOALS.openBooking, { place: 'header' })
+    openBooking({ open: true })
     setMenuOpen(false)
   }
 
@@ -47,15 +50,9 @@ const Header: FC<HeaderProps> = ({ header }) => {
           ))}
         </nav>
 
-        <a
-          className={styles.cta}
-          href={BOOKING_URL}
-          target="_blank"
-          rel="noreferrer"
-          onClick={onBook}
-        >
+        <button type="button" className={styles.cta} onClick={onBook}>
           {header.ctaLabel}
-        </a>
+        </button>
 
         <button
           className={classNames(styles.burger, {
@@ -86,15 +83,9 @@ const Header: FC<HeaderProps> = ({ header }) => {
               {nbp(link.label)}
             </Link>
           ))}
-          <a
-            className={styles.mobileCta}
-            href={BOOKING_URL}
-            target="_blank"
-            rel="noreferrer"
-            onClick={onBook}
-          >
+          <button type="button" className={styles.mobileCta} onClick={onBook}>
             {header.ctaLabel}
-          </a>
+          </button>
         </nav>
       )}
     </header>
