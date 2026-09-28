@@ -37,7 +37,7 @@ export const Envelope: FC = () => {
           ease: 'power3.out',
           scrollTrigger: {
             trigger: stage,
-            start: 'top 78%',
+            start: 'top 55%',
             toggleActions: 'play none none reverse'
           }
         }

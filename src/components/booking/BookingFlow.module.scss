@@ -111,6 +111,10 @@
 .body {
   overflow-y: auto;
   margin-top: 16px;
+
+  /* Сдвигаем скроллбар на 5px правее, чтобы он не ехал по контенту. */
+  margin-right: -5px;
+  padding-right: 5px;
   -webkit-overflow-scrolling: touch;
 }
 

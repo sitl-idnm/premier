@@ -48,10 +48,13 @@ export type SalonStaff = { key: string; label: string; list: Specialist[] }
 
 const stripHtml = (html: string) =>
   html
-    .replace(/<\/(p|div|li|br)>/gi, '\n')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|li|h[1-6])>/gi, '\n\n')
     .replace(/<[^>]+>/g, '')
     .replace(/&nbsp;/gi, ' ')
-    .replace(/\n{2,}/g, '\n')
+    .replace(/&amp;/gi, '&')
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
     .trim()
 
 const CACHE = 3600 // services/staff change rarely → cache 1h
