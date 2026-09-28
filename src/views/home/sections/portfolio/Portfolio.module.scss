@@ -16,6 +16,10 @@
 .head {
   @include mixins.container;
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
   margin-bottom: 30px;
 }
 
@@ -23,56 +27,77 @@
   @include mixins.section-title;
 }
 
-/* ---- Auto-scrolling photo wall (89 работ) ---- */
-.marquee {
+.arrows {
   display: flex;
-  flex-direction: column;
+  flex-shrink: 0;
+  gap: 8px;
+
+  @include mixins.mobile {
+    display: none;
+  }
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--gray-stroke);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color 0.16s ease,
+    color 0.16s ease;
+
+  &:hover {
+    border-color: var(--green-main);
+    color: var(--green-main);
+  }
+}
+
+/* ---- Одна линия с листанием (свайп/перетаскивание + стрелки) ---- */
+.strip {
+  @include mixins.container;
+
+  display: flex;
   gap: 16px;
-  overflow: hidden;
+  margin: 0 auto;
+  padding-bottom: 8px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  cursor: grab;
+  user-select: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
 
   @include mixins.mobile {
     gap: 10px;
   }
 }
 
-.row {
-  overflow: hidden;
-}
-
-.track {
-  display: flex;
-  width: max-content;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  will-change: transform;
-  animation: portfolio-scroll 90s linear infinite;
-
-  @include mixins.mobile {
-    animation-duration: 60s;
-  }
-}
-
-.row[data-dir='r'] .track {
-  animation-direction: reverse;
-}
-
-.marquee:hover .track {
-  animation-play-state: paused;
-}
-
 .cell {
   flex: 0 0 auto;
-  height: 320px;
-  margin-right: 16px;
+  height: 440px;
+  scroll-snap-align: start;
 
   @include mixins.tablet {
-    height: 260px;
+    height: 360px;
   }
 
   @include mixins.mobile {
-    height: 200px;
-    margin-right: 10px;
+    height: 300px;
   }
 }
 
@@ -81,26 +106,10 @@
   height: 100%;
   border-radius: var(--radius-card);
   object-fit: cover;
+  pointer-events: none;
 }
 
-@keyframes portfolio-scroll {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    /* -50% = ровно один набор (фото продублированы ×2) → бесшовный цикл */
-    transform: translateX(-50%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .track {
-    animation: none;
-  }
-}
-
-/* ---- CTA под стеной ---- */
+/* ---- CTA под галереей ---- */
 .ctaBand {
   @include mixins.container;
 
