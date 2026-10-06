@@ -2,7 +2,6 @@ import { getSiteContent } from '@/shared/content'
 import { getLiveCatalog, getSpecialists } from '@/shared/lib/yclients/catalog'
 
 import About from './sections/about/About'
-import { FloatingPromo } from './sections/hero/FloatingPromo'
 import Gifts from './sections/gifts/Gifts'
 import Hero from './sections/hero/Hero'
 import Loyalty from './sections/loyalty/Loyalty'
@@ -40,13 +39,6 @@ const Home = async () => {
       <Loyalty data={content.loyalty} />
       <Reviews data={content.reviews} />
       <Locations data={content.locations} />
-
-      <FloatingPromo
-        badge={content.hero.cardBadge}
-        title={content.hero.cardTitle}
-        sub={content.hero.cardSub}
-        btn={content.hero.cardBtn}
-      />
     </main>
   )
 }

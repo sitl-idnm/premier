@@ -109,9 +109,30 @@ export const DEFAULT_CONTENT = {
     outroLead: 'Красота — это вы.',
     outroAccent: '«Премьер» — это про красоту с корнями. И с будущим.',
     gallery: [
-      '/images/studios/studio-19.webp',
+      '/images/studios/studio-01.webp',
+      '/images/studios/studio-02.webp',
+      '/images/studios/studio-03.webp',
+      '/images/studios/studio-04.webp',
+      '/images/studios/studio-05.webp',
+      '/images/studios/studio-06.webp',
+      '/images/studios/studio-07.webp',
       '/images/studios/studio-08.webp',
-      '/images/studios/studio-13.webp'
+      '/images/studios/studio-09.webp',
+      '/images/studios/studio-10.webp',
+      '/images/studios/studio-11.webp',
+      '/images/studios/studio-12.webp',
+      '/images/studios/studio-13.webp',
+      '/images/studios/studio-14.webp',
+      '/images/studios/studio-15.webp',
+      '/images/studios/studio-16.webp',
+      '/images/studios/studio-17.webp',
+      '/images/studios/studio-18.webp',
+      '/images/studios/studio-19.webp',
+      '/images/studios/studio-20.webp',
+      '/images/studios/studio-21.webp',
+      '/images/studios/studio-22.webp',
+      '/images/studios/studio-23.webp',
+      '/images/studios/studio-24.webp'
     ]
   },
 

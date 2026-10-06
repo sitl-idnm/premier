@@ -16,6 +16,21 @@
   }
 }
 
+/* Promo card («Скидка 20%») row at the top of the footer card. */
+.promoBand {
+  display: flex;
+  padding: 34px 48px;
+  border-bottom: 1px solid rgba(51, 51, 51, 0.1);
+
+  @include mixins.tablet {
+    padding: 30px 32px;
+  }
+
+  @include mixins.mobile {
+    padding: 28px 20px;
+  }
+}
+
 .wrap {
   display: flex;
   align-items: center;

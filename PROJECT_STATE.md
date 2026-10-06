@@ -87,7 +87,7 @@ Fill these from Figma (see workspace `CLAUDE.md` extraction rules):
 | Cookie banner | component | ✅ functional | `src/components/cookie/` | neutral |
 | Admin panel | app | ✅ functional | `src/app/(admin)/` | recolored via tokens; groups for all sections |
 | Hero (Обложка) | section | ✅ done | `src/views/home/sections/hero/` | scaled cqw canvas + mobile stack; «Скидка 20%» card вынесена в плавающий виджет (см. Round 3) |
-| Плавающий промо | component | ✅ done | `.../hero/FloatingPromo.tsx` | «Скидка 20%» фикс. в правом нижнем углу + крестик (закрытие на сессию, sessionStorage) |
+| Промо в футере | component | ✅ done | `src/modules/footer/FooterPromo.tsx` | «Скидка 20%» статичной карточкой вверху футера (белая, cqw-scale). Был плавающий виджет — клиент попросил перенести в футер |
 | Акции (promos) | section | ⏸ скрыт | `.../promos/` | блок скрыт по просьбе клиента (закомм. в `home.tsx`, пункт меню убран) — ждём контент акций |
 | Выбор салона | section | ✅ done | `.../salons/` | 2 salon cards; фото — интерьеры клиента (`/images/studios/studio-16,-09`) |
 | Цены (прайс) | section | ✅ done (данные плейсхолдер) | `.../prices/` | salon segmented control → category tabs → price list; **prices are PLACEHOLDER — import from Figma 58:1839** |
@@ -231,7 +231,8 @@ Status: ⬜ Todo / ⚠️ Placeholder / 🔄 In Progress / ✅ Done
   - **Интерьеры (карточки салонов + галерея «О нас»)** ← `Премьер Студии` (24 фото):
     новый `scripts/optimize-studios.mjs` → `public/images/studios/studio-01..24.webp`.
     `defaults.ts`: Таганская → `studio-16` (бордовый зал с зеркалами), Новослободская →
-    `studio-09` (зелёная зона), галерея «О нас» → `studio-19/08/13` (русская эстетика).
+    `studio-09` (зелёная зона). Галерея «О нас» («Красота, которая говорит тихо») —
+    **все 24 фото студий** (studio-01..24; карусель с точками, точки переносятся в ряд).
   - Удалены старые `about-photo.png`, `salon-taganskaya.png`, `salon-novoslobodskaya.png`.
   - HEIC декодируется через `heic-convert` → JPEG → `sharp` → webp. Подбор фото — по смыслу
     (ракурсы интерьеров); клиент может переназначить любое фото через админку или правкой
@@ -249,3 +250,16 @@ Status: ⬜ Todo / ⚠️ Placeholder / 🔄 In Progress / ✅ Done
   папок на замену не ждём. Блок «Акции» — просто скрыт (не удалён).
   ⚠️ В проде контент мержится из Supabase (`premier_site_content`) поверх `defaults.ts`:
   если там сохранён старый `nav`/`promos`, правки меню/фото нужно продублировать в админке.
+
+## Round 4 — правки клиента (2026-10-06)
+- **Промо «Скидка 20%» перенесено в футер** (было плавающим в правом нижнем углу —
+  клиент попросил не лепить к экрану). Новый `src/modules/footer/FooterPromo.tsx`
+  (+ `.module.scss`) — статичная белая карточка вверху футера, кнопка открывает модалку
+  брони (`place: 'footer-promo'`). Удалены `FloatingPromo.*` и `HeroCard.*` из `hero/`
+  (HeroCard больше нигде не использовался). Из `home.tsx` виджет убран.
+- **Галерея «Красота, которая говорит тихо» — все 24 фото студий** (`studio-01..24`):
+  `defaults.ts` → `about.gallery`. Точки навигации в `AboutGallery` переведены на
+  перенос (`flex-wrap`, 7px) — 24 точки умещаются в ряд, на мобилке переносятся.
+- QA (dev :3218, 1280px): плавающего виджета нет; промо статично внутри `footer`
+  (`position: static`, ширина 300, кнопка брони есть); в галерее 24 точки; фото галереи
+  и промо грузятся. `tsc` + `next lint` — чисто.

@@ -43,16 +43,19 @@
 
 .dots {
   position: absolute;
-  bottom: 4%;
+  bottom: 3%;
   left: 50%;
   display: flex;
-  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  max-width: 82%;
   transform: translateX(-50%);
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   padding: 0;
   border: none;
   border-radius: 50%;
