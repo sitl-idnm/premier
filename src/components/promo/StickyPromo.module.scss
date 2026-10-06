@@ -2,6 +2,9 @@
 @use '@styles/mixins';
 
 .wrap {
+  /* Own container so the card's border-radius (cqw) resolves against the widget
+     width (~300px → ~12px), not the viewport. */
+  container-type: inline-size;
   position: fixed;
   z-index: 60;
   right: 24px;
