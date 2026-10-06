@@ -1,28 +1,58 @@
 @use '@styles/func' as *;
 @use '@styles/mixins';
 
-/* Fixed-size slot that becomes the container for the cqw-scaled card. */
-.slot {
-  container-type: inline-size;
-  width: 100%;
-  max-width: 300px;
-  aspect-ratio: 253 / 142;
+.wrap {
+  position: fixed;
+  z-index: 60;
+  right: 24px;
+  bottom: 24px;
+  width: 300px;
+  filter: drop-shadow(0 12px 32px rgba(51, 51, 51, 0.18));
+  animation: promoIn 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
 
   @include mixins.mobile {
-    max-width: none;
+    right: 12px;
+    bottom: 12px;
+    width: min(280px, calc(100vw - 24px));
   }
 }
 
-/* Self-scaling card: it is its own container, inner elements sized in cqw of the
-   253px reference card. White fill so it reads on the beige footer. */
+/* Self-scaling card — its own container; inner elements sized in cqw of the 253px
+   reference card. White fill + shadow so it reads over any page content. */
 .card {
   container-type: inline-size;
   position: relative;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 253 / 142;
   border-radius: cqw(10, 253);
   background: var(--white);
-  box-shadow: 0 8px 24px rgba(51, 51, 51, 0.1);
+}
+
+.close {
+  position: absolute;
+  z-index: 1;
+  top: -9px;
+  right: -9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--white);
+  cursor: pointer;
+  transition: background-color 0.16s ease, transform 0.16s ease;
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  &:hover {
+    background: var(--green-main);
+    transform: scale(1.06);
+  }
 }
 
 .badge {
@@ -95,5 +125,23 @@
 
   &:hover {
     background: var(--green-active);
+  }
+}
+
+@keyframes promoIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap {
+    animation: none;
   }
 }

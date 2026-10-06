@@ -9,6 +9,7 @@ import { YandexMetrika } from '@/components/analytics/YandexMetrika'
 import { BookingFlow } from '@/components/booking/BookingFlow'
 import { CookieBanner } from '@/components/cookie/CookieBanner'
 import { ModalHost } from '@/components/modal/ModalHost'
+import { StickyPromo } from '@/components/promo/StickyPromo'
 import { ScrollTop } from '@/components/scroll-top/ScrollTop'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -69,6 +70,12 @@ export default async function SiteLayout({
       />
       <CookieBanner />
       <ScrollTop />
+      <StickyPromo
+        badge={content.hero.cardBadge}
+        title={content.hero.cardTitle}
+        sub={content.hero.cardSub}
+        btn={content.hero.cardBtn}
+      />
       <BookingFlow />
       <div id="modal-root" />
     </>

@@ -87,7 +87,7 @@ Fill these from Figma (see workspace `CLAUDE.md` extraction rules):
 | Cookie banner | component | ✅ functional | `src/components/cookie/` | neutral |
 | Admin panel | app | ✅ functional | `src/app/(admin)/` | recolored via tokens; groups for all sections |
 | Hero (Обложка) | section | ✅ done | `src/views/home/sections/hero/` | scaled cqw canvas + mobile stack; «Скидка 20%» card вынесена в плавающий виджет (см. Round 3) |
-| Промо в футере | component | ✅ done | `src/modules/footer/FooterPromo.tsx` | «Скидка 20%» статичной карточкой вверху футера (белая, cqw-scale). Был плавающий виджет — клиент попросил перенести в футер |
+| Sticky промо | component | ✅ done | `src/components/promo/StickyPromo.tsx` | «Скидка 20%» фикс. в правом нижнем углу, следует за скроллом + крестик. **Смонтирован в `(site)/layout.tsx`, НЕ в `template`** — иначе transform анимации страницы ловит `position:fixed` и он перестаёт стикаться. ScrollTop уведён в левый нижний угол |
 | Акции (promos) | section | ⏸ скрыт | `.../promos/` | блок скрыт по просьбе клиента (закомм. в `home.tsx`, пункт меню убран) — ждём контент акций |
 | Выбор салона | section | ✅ done | `.../salons/` | 2 salon cards; фото — интерьеры клиента (`/images/studios/studio-16,-09`) |
 | Цены (прайс) | section | ✅ done (данные плейсхолдер) | `.../prices/` | salon segmented control → category tabs → price list; **prices are PLACEHOLDER — import from Figma 58:1839** |
@@ -263,3 +263,20 @@ Status: ⬜ Todo / ⚠️ Placeholder / 🔄 In Progress / ✅ Done
 - QA (dev :3218, 1280px): плавающего виджета нет; промо статично внутри `footer`
   (`position: static`, ширина 300, кнопка брони есть); в галерее 24 точки; фото галереи
   и промо грузятся. `tsc` + `next lint` — чисто.
+
+## Round 5 — sticky-промо (2026-10-06)
+- **Промо «Скидка 20%» снова плавающее, но теперь ДЕЙСТВИТЕЛЬНО стикается** за скроллом
+  в правом нижнем углу (клиент: «должен следовать за скроллом, типа sticky»; в футере не
+  надо). Корень прошлого бага («не стикался, просто внизу страницы»): `(site)/template`
+  (`.page`) держит `transform: translateY(0)` от анимации появления (`animation … both`),
+  а любой `transform`-предок превращает `position:fixed` потомка в «absolute». Поэтому
+  виджет теперь **смонтирован в `(site)/layout.tsx`** (рядом с `ScrollTop`/`CookieBanner`,
+  вне `template`) → `fixed` считается от вьюпорта. Новый компонент
+  `src/components/promo/StickyPromo.tsx` (+ scss): белая cqw-карточка, крестик (закрытие на
+  сессию через `sessionStorage['premier-promo-dismissed']`), кнопка → модалка брони
+  (`place: 'sticky-promo'`). Удалён `FooterPromo.*`, из `footer.tsx` промо убрано.
+- **ScrollTop уведён в левый нижний угол** (`left: 24/12`), чтобы не пересекался со стики-
+  промо в правом углу.
+- QA (dev :3219, 1280px): виджет `position:fixed`, координаты 24/24 от вьюпорта неизменны
+  вверху/в середине/внизу страницы (следует за скроллом); ScrollTop слева снизу, виден
+  после скролла; пересечения нет; крестик закрывает. `tsc` + `next lint` — чисто.

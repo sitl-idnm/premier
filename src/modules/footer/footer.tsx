@@ -6,23 +6,13 @@ import { Logo } from '@ui/logo'
 
 import { TrackedLink } from '@/components/analytics/TrackedLink'
 
-import { FooterPromo } from './FooterPromo'
 import styles from './footer.module.scss'
 
 const Footer = async () => {
-  const { footer, contacts, hero } = await getSiteContent()
+  const { footer, contacts } = await getSiteContent()
 
   return (
     <footer className={styles.root}>
-      <div className={styles.promoBand}>
-        <FooterPromo
-          badge={hero.cardBadge}
-          title={hero.cardTitle}
-          sub={hero.cardSub}
-          btn={hero.cardBtn}
-        />
-      </div>
-
       <div className={styles.wrap}>
         <Link href="/" className={styles.logoLink} aria-label="Премьер">
           <Logo variant="dark" />

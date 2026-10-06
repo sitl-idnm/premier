@@ -1,9 +1,10 @@
 @use '@styles/mixins';
 
+/* Bottom-LEFT so it never collides with the sticky promo widget (bottom-right). */
 .btn {
   position: fixed;
   z-index: 60;
-  right: 24px;
+  left: 24px;
   bottom: 24px;
   display: grid;
   place-items: center;
@@ -34,7 +35,7 @@
   }
 
   @include mixins.mobile {
-    right: 12px;
+    left: 12px;
     bottom: 12px;
     width: 46px;
     height: 46px;
