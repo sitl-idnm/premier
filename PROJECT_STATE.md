@@ -86,9 +86,10 @@ Fill these from Figma (see workspace `CLAUDE.md` extraction rules):
 | Booking modal | component | ✅ functional | `src/components/modal/` | name+phone+consent → /api/lead |
 | Cookie banner | component | ✅ functional | `src/components/cookie/` | neutral |
 | Admin panel | app | ✅ functional | `src/app/(admin)/` | recolored via tokens; groups for all sections |
-| Hero (Обложка) | section | ✅ done | `src/views/home/sections/hero/` | scaled cqw canvas + mobile stack |
-| Акции (promos) | section | ✅ done | `.../promos/` | 2 promo cards + glass «все предложения» card |
-| Выбор салона | section | ✅ done | `.../salons/` | 2 salon cards (metro badge, photo, CTA) |
+| Hero (Обложка) | section | ✅ done | `src/views/home/sections/hero/` | scaled cqw canvas + mobile stack; «Скидка 20%» card вынесена в плавающий виджет (см. Round 3) |
+| Плавающий промо | component | ✅ done | `.../hero/FloatingPromo.tsx` | «Скидка 20%» фикс. в правом нижнем углу + крестик (закрытие на сессию, sessionStorage) |
+| Акции (promos) | section | ⏸ скрыт | `.../promos/` | блок скрыт по просьбе клиента (закомм. в `home.tsx`, пункт меню убран) — ждём контент акций |
+| Выбор салона | section | ✅ done | `.../salons/` | 2 salon cards; фото — интерьеры клиента (`/images/studios/studio-16,-09`) |
 | Цены (прайс) | section | ✅ done (данные плейсхолдер) | `.../prices/` | salon segmented control → category tabs → price list; **prices are PLACEHOLDER — import from Figma 58:1839** |
 | О нас | section | ✅ done | `.../about/` | text + real cloud SVG (`about-cloud.svg`) + oval photo carousel |
 | Портфолио | section | ✅ done | `.../portfolio/` | full-width centered 4-up gallery (scroll on ≤tablet) |
@@ -211,3 +212,40 @@ Status: ⬜ Todo / ⚠️ Placeholder / 🔄 In Progress / ✅ Done
   the embed arrives.
 - **Figma still rate-limited (429)** on both data and render endpoints — pending
   extractions: exact price rows/geometry, plus any hi-res re-exports.
+
+## Round 3 — client review (2026-10-06)
+- **Логотип в хедере увеличен**: `.dark` в `src/ui/logo/logo.module.scss` 137×42 → 172×53
+  (пропорция сохранена). Footer (`.light`) не трогали.
+- **«Скидка 20%» вынесена из главного блока** в плавающий виджет
+  (`src/views/home/sections/hero/FloatingPromo.tsx` + `.module.scss`): `position: fixed`
+  правый нижний угол (24px), переиспользует `HeroCard`, крестик в правом верхнем углу
+  закрывает на сессию (`sessionStorage['premier-promo-dismissed']`). Рендерится в
+  `home.tsx`. Из `Hero.tsx` удалены `cardSlot`/`mCardSlot` (и их стили).
+- **Блок «Акции» скрыт целиком**: `<Promos>` закомментирован в `home.tsx` (+ импорт убран),
+  пункт меню `#promos` удалён из `header.nav` в `defaults.ts`. Контент `promos`/`promo-*.png`
+  оставлены на месте — вернуть блок, когда клиент даст акции.
+- **Замена фото из клиентского архива** `C:/Users/sitl/Downloads/Архив`:
+  - **Портфолио («работы» / «фото волос»)** ← `Премьер Головы` (17 фото): прогнаны через
+    `scripts/optimize-portfolio.mjs` → `public/images/portfolio/photo-01..17.webp`
+    (+ перегенерён `photos.generated.ts`). Старый набор затёрт скриптом (`rm` OUT_DIR).
+  - **Интерьеры (карточки салонов + галерея «О нас»)** ← `Премьер Студии` (24 фото):
+    новый `scripts/optimize-studios.mjs` → `public/images/studios/studio-01..24.webp`.
+    `defaults.ts`: Таганская → `studio-16` (бордовый зал с зеркалами), Новослободская →
+    `studio-09` (зелёная зона), галерея «О нас» → `studio-19/08/13` (русская эстетика).
+  - Удалены старые `about-photo.png`, `salon-taganskaya.png`, `salon-novoslobodskaya.png`.
+  - HEIC декодируется через `heic-convert` → JPEG → `sharp` → webp. Подбор фото — по смыслу
+    (ракурсы интерьеров); клиент может переназначить любое фото через админку или правкой
+    `defaults.ts` (файлов `studio-*` доступно 24).
+- **Фавикон взят с premiersalon.ru** (`/wp-content/uploads/favicon.svg` — зелёный
+  #007965 скруглённый квадрат + белая монограмма). Заменён `src/app/icon.svg`; из него
+  пересобраны `public/icon-192.png`, `public/icon-512.png`, `src/app/apple-icon.png`
+  и мультиразмерный `public/favicon.ico` через `sharp`.
+- **QA (dev :3217, 1280px):** лого 172×53; виджет в правом нижнем углу (24/24, крестик
+  сверху-справа, закрытие работает); секции «Акции» нет (порядок hero→salons→prices…);
+  все новые фото грузятся (ok). Ошибки в консоли — только Yandex (Metrika/карты/отзывы)
+  в sandbox-браузере, не наши. `tsc --noEmit` и `next lint` — чисто.
+- **Фото клиента получены и разложены полностью** (2 папки): `Премьер Студии` → локации
+  (карточки салонов + галерея «О нас»), `Премьер Головы` → работы (портфолио). Других
+  папок на замену не ждём. Блок «Акции» — просто скрыт (не удалён).
+  ⚠️ В проде контент мержится из Supabase (`premier_site_content`) поверх `defaults.ts`:
+  если там сохранён старый `nav`/`promos`, правки меню/фото нужно продублировать в админке.

@@ -1,0 +1,68 @@
+@use '@styles/mixins';
+
+.wrap {
+  position: fixed;
+  z-index: 60;
+  right: 24px;
+  bottom: 24px;
+  width: 300px;
+  filter: drop-shadow(0 12px 32px rgba(51, 51, 51, 0.18));
+  animation: promoIn 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
+
+  @include mixins.mobile {
+    right: 12px;
+    bottom: 12px;
+    width: min(280px, calc(100vw - 24px));
+  }
+}
+
+.slot {
+  container-type: inline-size;
+  width: 100%;
+  aspect-ratio: 253 / 142;
+}
+
+.close {
+  position: absolute;
+  z-index: 1;
+  top: -9px;
+  right: -9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--white);
+  cursor: pointer;
+  transition: background-color 0.16s ease, transform 0.16s ease;
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  &:hover {
+    background: var(--green-main);
+    transform: scale(1.06);
+  }
+}
+
+@keyframes promoIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap {
+    animation: none;
+  }
+}

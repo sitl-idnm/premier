@@ -40,8 +40,8 @@ const Salons: FC<{ data: SiteContent['salons'] }> = ({ data }) => {
               <Image
                 src={item.photo}
                 alt=""
-                width={1667}
-                height={2500}
+                width={1200}
+                height={1600}
                 sizes="(max-width: 900px) 100vw, 300px"
                 className={styles.photo}
               />

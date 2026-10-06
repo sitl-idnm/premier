@@ -3,7 +3,6 @@ import Image from 'next/image'
 import { type SiteContent } from '@/shared/content'
 import { nbp } from '@/shared/lib/typography'
 
-import { HeroCard } from './HeroCard'
 import styles from './Hero.module.scss'
 
 const Hero: FC<{ data: SiteContent['hero'] }> = ({ data }) => {
@@ -41,14 +40,6 @@ const Hero: FC<{ data: SiteContent['hero'] }> = ({ data }) => {
           {nbp(data.noteLead)}
           <strong>{data.noteAccent}</strong>
         </p>
-        <div className={styles.cardSlot}>
-          <HeroCard
-            badge={data.cardBadge}
-            title={data.cardTitle}
-            sub={data.cardSub}
-            btn={data.cardBtn}
-          />
-        </div>
       </div>
 
       {/* Mobile — vertical stack (Figma mobile frame) */}
@@ -65,14 +56,6 @@ const Hero: FC<{ data: SiteContent['hero'] }> = ({ data }) => {
           {nbp(data.noteLead)}
           <strong>{data.noteAccent}</strong>
         </p>
-        <div className={styles.mCardSlot}>
-          <HeroCard
-            badge={data.cardBadge}
-            title={data.cardTitle}
-            sub={data.cardSub}
-            btn={data.cardBtn}
-          />
-        </div>
       </div>
     </section>
   )

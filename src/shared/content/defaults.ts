@@ -75,14 +75,14 @@ export const DEFAULT_CONTENT = {
         metro: 'Таганская',
         title: 'Камерная локация\nс атмосферой тишины',
         desc: 'Парикмахерский зал, ногтевой сервис, брови и ресницы, косметология, уход за телом',
-        photo: '/images/salon-taganskaya.png',
+        photo: '/images/studios/studio-16.webp',
         href: '#locations'
       },
       {
         metro: 'Новослободская',
         title: 'Просторный зал и современное оснащение',
         desc: 'Парикмахерский зал, ногтевой сервис, брови и ресницы, макияж',
-        photo: '/images/salon-novoslobodskaya.png',
+        photo: '/images/studios/studio-09.webp',
         href: '#locations'
       }
     ]
@@ -109,9 +109,9 @@ export const DEFAULT_CONTENT = {
     outroLead: 'Красота — это вы.',
     outroAccent: '«Премьер» — это про красоту с корнями. И с будущим.',
     gallery: [
-      '/images/about-photo.png',
-      '/images/salon-taganskaya.png',
-      '/images/salon-novoslobodskaya.png'
+      '/images/studios/studio-19.webp',
+      '/images/studios/studio-08.webp',
+      '/images/studios/studio-13.webp'
     ]
   },
 
@@ -223,7 +223,6 @@ export const DEFAULT_CONTENT = {
     nav: [
       { href: '#salons', label: 'Выбрать салон' },
       { href: '#prices', label: 'Цены' },
-      { href: '#promos', label: 'Акции' },
       { href: '#gifts', label: 'Сертификаты' },
       { href: '#locations', label: 'Контакты' }
     ] as { href: string; label: string }[],

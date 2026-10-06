@@ -2,13 +2,13 @@ import { getSiteContent } from '@/shared/content'
 import { getLiveCatalog, getSpecialists } from '@/shared/lib/yclients/catalog'
 
 import About from './sections/about/About'
+import { FloatingPromo } from './sections/hero/FloatingPromo'
 import Gifts from './sections/gifts/Gifts'
 import Hero from './sections/hero/Hero'
 import Loyalty from './sections/loyalty/Loyalty'
 import Locations from './sections/locations/Locations'
 import Portfolio from './sections/portfolio/Portfolio'
 import Prices from './sections/prices/Prices'
-import Promos from './sections/promos/Promos'
 import Reviews from './sections/reviews/Reviews'
 import Salons from './sections/salons/Salons'
 import Specialists from './sections/specialists/Specialists'
@@ -29,7 +29,8 @@ const Home = async () => {
   return (
     <main>
       <Hero data={content.hero} />
-      <Promos data={content.promos} />
+      {/* Акции скрыты по просьбе клиента — вернуть, когда появятся акции */}
+      {/* <Promos data={content.promos} /> */}
       <Salons data={content.salons} />
       <Prices data={prices} />
       {hasStaff && <Specialists salons={staff} />}
@@ -39,6 +40,13 @@ const Home = async () => {
       <Loyalty data={content.loyalty} />
       <Reviews data={content.reviews} />
       <Locations data={content.locations} />
+
+      <FloatingPromo
+        badge={content.hero.cardBadge}
+        title={content.hero.cardTitle}
+        sub={content.hero.cardSub}
+        btn={content.hero.cardBtn}
+      />
     </main>
   )
 }
