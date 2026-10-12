@@ -280,3 +280,19 @@ Status: ⬜ Todo / ⚠️ Placeholder / 🔄 In Progress / ✅ Done
 - QA (dev :3219, 1280px): виджет `position:fixed`, координаты 24/24 от вьюпорта неизменны
   вверху/в середине/внизу страницы (следует за скроллом); ScrollTop слева снизу, виден
   после скролла; пересечения нет; крестик закрывает. `tsc` + `next lint` — чисто.
+
+## Round 6 — карусель «Мастера» + фото (2026-10-12)
+- **Отладил карусель специалистов** (`sections/specialists/`), «листалась хуёво». Причины и
+  фиксы: (1) `scroll-snap-align: start` на карточках не работал без `scroll-snap-type` на
+  треке → добавил `scroll-snap-type: x proximity`; (2) drag без pointer-capture рвался при
+  уходе курсора с трека + `onPointerLeave` → теперь `setPointerCapture`/`releasePointerCapture`,
+  `onPointerCancel` вместо `onPointerLeave`, drag только для `pointerType === 'mouse'`;
+  (3) `touch-action: pan-y` блокировал нативный горизонтальный свайп с инерцией на мобилке →
+  убрал (default auto) + `-webkit-overflow-scrolling: touch` + `overscroll-behavior-x: contain`;
+  (4) стрелки скроллили фикс. 520px → теперь шаг = «страница» целиком видимых карточек
+  (`floor(clientWidth/(cardW+gap))`), устойчиво к брейкпоинтам; (5) при смене салона
+  (`selectSalon`) сбрасываю `scrollLeft` в 0. QA (dev :3221): стрелки листают с привязкой к
+  карточкам, доходят до конца (maxLeft), drag мышью работает; `tsc`+`lint` чисто.
+- **Фото «Новослободской» — ждём от клиента**, какое именно поставить (сейчас
+  `salons.items[Новослободская].photo = /images/studios/studio-09.webp`; 24 фото студий
+  доступны в `public/images/studios/`).

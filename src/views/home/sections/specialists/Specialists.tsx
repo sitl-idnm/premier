@@ -70,19 +70,48 @@ const Specialists: FC<{ salons: SalonStaff[] }> = ({ salons }) => {
   const openBooking = useSetAtom(bookingAtom)
 
   const trackRef = useRef<HTMLDivElement>(null)
-  const drag = useRef({ down: false, startX: 0, startLeft: 0, moved: false })
+  const drag = useRef({
+    down: false,
+    startX: 0,
+    startLeft: 0,
+    moved: false,
+    pointerId: -1
+  })
 
   const salon = useMemo(() => withStaff[active] ?? withStaff[0], [withStaff, active])
   if (!salon) return null
 
-  const scrollByDir = (dir: 1 | -1) => {
-    trackRef.current?.scrollBy({ left: dir * 520, behavior: 'smooth' })
+  const selectSalon = (i: number) => {
+    setActive(i)
+    // Новый салон — список показываем с начала.
+    trackRef.current?.scrollTo({ left: 0 })
   }
 
-  const onPointerDown = (e: React.PointerEvent) => {
+  // Шаг стрелки = одна «страница» целиком видимых карточек (устойчиво к размеру
+  // карточки и брейкпоинту), с привязкой к началу карточки через scroll-snap.
+  const scrollByDir = (dir: 1 | -1) => {
     const t = trackRef.current
     if (!t) return
-    drag.current = { down: true, startX: e.clientX, startLeft: t.scrollLeft, moved: false }
+    const card = t.firstElementChild as HTMLElement | null
+    const gap = parseFloat(getComputedStyle(t).columnGap || '20') || 20
+    const step = card ? card.offsetWidth + gap : 260
+    const perView = Math.max(1, Math.floor(t.clientWidth / step))
+    t.scrollBy({ left: dir * step * perView, behavior: 'smooth' })
+  }
+
+  // Drag-to-scroll только мышью; тач/перо используют нативный скролл с инерцией.
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType !== 'mouse') return
+    const t = trackRef.current
+    if (!t) return
+    drag.current = {
+      down: true,
+      startX: e.clientX,
+      startLeft: t.scrollLeft,
+      moved: false,
+      pointerId: e.pointerId
+    }
+    t.setPointerCapture(e.pointerId)
   }
   const onPointerMove = (e: React.PointerEvent) => {
     const t = trackRef.current
@@ -92,7 +121,13 @@ const Specialists: FC<{ salons: SalonStaff[] }> = ({ salons }) => {
     t.scrollLeft = drag.current.startLeft - dx
   }
   const endDrag = () => {
+    if (!drag.current.down) return
     drag.current.down = false
+    const t = trackRef.current
+    const pid = drag.current.pointerId
+    if (t && pid >= 0 && t.hasPointerCapture?.(pid)) {
+      t.releasePointerCapture(pid)
+    }
   }
 
   const bookMaster = (m: Master) => {
@@ -124,7 +159,7 @@ const Specialists: FC<{ salons: SalonStaff[] }> = ({ salons }) => {
                     className={classNames(styles.swBtn, {
                       [styles.swBtnActive]: i === active
                     })}
-                    onClick={() => setActive(i)}
+                    onClick={() => selectSalon(i)}
                   >
                     {s.label}
                   </button>
@@ -149,7 +184,7 @@ const Specialists: FC<{ salons: SalonStaff[] }> = ({ salons }) => {
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={endDrag}
-          onPointerLeave={endDrag}
+          onPointerCancel={endDrag}
         >
           {salon.list.map((m) => (
             <button
