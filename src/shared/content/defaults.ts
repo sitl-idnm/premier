@@ -82,7 +82,7 @@ export const DEFAULT_CONTENT = {
         metro: 'Новослободская',
         title: 'Просторный зал и современное оснащение',
         desc: 'Парикмахерский зал, ногтевой сервис, брови и ресницы, макияж',
-        photo: '/images/studios/studio-09.webp',
+        photo: '/images/studios/studio-nslob.webp',
         href: '#locations'
       }
     ]
