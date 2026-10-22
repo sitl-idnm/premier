@@ -2,24 +2,21 @@
 
 import { FC, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { GOALS, ymGoal } from '@/shared/lib/metrika'
+import { type Consent, readConsent, saveConsent } from '@/shared/lib/consent'
 import { nbp } from '@/shared/lib/typography'
 import { Button } from '@ui/button'
 
 import styles from './cookie.module.scss'
 
-const STORAGE_KEY = 'premier-cookie-accepted'
-
 export const CookieBanner: FC = () => {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    if (!localStorage.getItem(STORAGE_KEY)) setVisible(true)
+    if (!readConsent()) setVisible(true)
   }, [])
 
-  const accept = () => {
-    localStorage.setItem(STORAGE_KEY, '1')
-    ymGoal(GOALS.cookieAccept)
+  const choose = (value: Consent) => {
+    saveConsent(value)
     setVisible(false)
   }
 
@@ -29,13 +26,22 @@ export const CookieBanner: FC = () => {
     <div className={styles.root} role="dialog" aria-label="Cookie">
       <p className={styles.text}>
         {nbp(
-          'Мы используем файлы cookie, чтобы вам было удобнее пользоваться нашим сайтом. Продолжая просмотр, вы соглашаетесь на их использование. Подробнее — в '
+          'Мы используем необходимые cookie для работы сайта. С вашего согласия — также Яндекс.Метрику и виджеты Яндекса (карты, отзывы). Подробнее — в '
         )}
         <Link href="/privacy">Политике обработки персональных данных</Link>
       </p>
-      <Button variant="orange" onClick={accept}>
-        Принять
-      </Button>
+      <div className={styles.actions}>
+        <Button variant="orange" onClick={() => choose('all')}>
+          Принять
+        </Button>
+        <button
+          type="button"
+          className={styles.necessary}
+          onClick={() => choose('necessary')}
+        >
+          Только необходимые
+        </button>
+      </div>
     </div>
   )
 }

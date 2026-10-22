@@ -1,6 +1,7 @@
 'use client'
 
 import { FC, useState } from 'react'
+import { YandexFrame } from '@/components/consent/YandexFrame'
 import classNames from 'classnames'
 import { CtaButton } from '@/components/cta/CtaButton'
 import { type SiteContent } from '@/shared/content'
@@ -53,11 +54,11 @@ const Locations: FC<{ data: SiteContent['locations'] }> = ({ data }) => {
               className={styles.card}
               data-active={i === active}
             >
-              <iframe
+              <YandexFrame
                 src={item.mapSrc}
                 title={`Карта: ${item.address}`}
                 className={styles.map}
-                loading="lazy"
+                label="Показать карту"
                 allowFullScreen
               />
 

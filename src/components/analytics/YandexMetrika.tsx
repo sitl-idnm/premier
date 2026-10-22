@@ -2,14 +2,17 @@
 
 import { FC } from 'react'
 import Script from 'next/script'
+import { useConsent } from '@/shared/hooks/useConsent'
 import { YM_ID } from '@/shared/lib/metrika'
 
 /**
  * Injects the Yandex.Metrika counter (id from NEXT_PUBLIC_YM_ID).
- * Renders nothing when the id is missing so local/dev builds stay quiet.
+ * Renders nothing when the id is missing so local/dev builds stay quiet,
+ * and nothing until the visitor clicks «Принять» in the cookie banner.
  */
 export const YandexMetrika: FC = () => {
-  if (!YM_ID) return null
+  const consent = useConsent()
+  if (!YM_ID || consent !== 'all') return null
 
   return (
     <>

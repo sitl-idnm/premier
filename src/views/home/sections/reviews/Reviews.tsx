@@ -1,6 +1,7 @@
 'use client'
 
 import { FC, useState } from 'react'
+import { YandexFrame } from '@/components/consent/YandexFrame'
 import classNames from 'classnames'
 import { type SiteContent } from '@/shared/content'
 import { GOALS, ymGoal } from '@/shared/lib/metrika'
@@ -60,11 +61,11 @@ const Reviews: FC<{ data: SiteContent['reviews'] }> = ({ data }) => {
               data-active={i === active}
             >
               <span className={styles.label}>{nbp(w.label)}</span>
-              <iframe
+              <YandexFrame
                 src={w.src}
                 title={`Отзывы: ${w.label}`}
                 className={styles.frame}
-                loading="lazy"
+                label="Показать отзывы"
               />
             </div>
           ))}
