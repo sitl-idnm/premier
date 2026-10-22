@@ -48,26 +48,38 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 6px;
   max-width: 82%;
   transform: translateX(-50%);
 }
 
+/* Кнопка 24×24 — область нажатия по WCAG 2.5.8; видимая точка 7px рисуется ::before. */
 .dot {
-  width: 7px;
-  height: 7px;
+  position: relative;
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: none;
-  border-radius: 50%;
-  background: var(--gray-stroke);
+  background: none;
   cursor: pointer;
-  transition: background-color 0.16s ease;
 
-  &:hover {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gray-stroke);
+    transform: translate(-50%, -50%);
+    transition: background-color 0.16s ease;
+  }
+
+  &:hover::before {
     background: var(--gray-text);
   }
 }
 
-.dotActive {
+.dotActive::before {
   background: var(--green-main);
 }

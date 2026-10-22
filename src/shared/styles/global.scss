@@ -52,7 +52,7 @@
   /* ---- Neutrals ---- */
   --ink: rgb(51, 51, 51);              /* #333333 dark text / footer bg */
   --dark-main: rgb(51, 51, 51);
-  --dark-secondary: rgb(128, 128, 128);
+  --dark-secondary: rgb(102, 102, 102); /* было #808080 — контраст AA */
   --dark-800: rgba(51, 51, 51, 0.8);
   --dark-600: rgba(51, 51, 51, 0.6);
   --dark-400: rgba(51, 51, 51, 0.4);
@@ -76,7 +76,7 @@
   --beige: rgb(242, 237, 229);         /* #F2EDE5 */
   --beige-deep: rgb(226, 221, 211);    /* #E2DDD3 */
   --glass-stroke: rgb(242, 239, 231);  /* #F2EFE7 */
-  --gray-text: rgb(128, 128, 128);     /* #808080 «Текст» — dominant text/heading */
+  --gray-text: rgb(102, 102, 102);     /* #666666 (Figma #808080) «Текст» — затемнён ради контраста AA */
   --gray-heading: rgb(134, 134, 134);  /* #868686 promo heading */
   --gray-stroke: rgb(203, 203, 203);   /* #CBCBCB */
   --footer-bg: rgb(51, 51, 51);        /* #333333 */
