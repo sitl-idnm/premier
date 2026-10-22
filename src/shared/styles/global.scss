@@ -1,6 +1,20 @@
 @import 'mixins';
 
 /*
+ * Знак ₽ — системным шрифтом. В Inter он лежит в наборе latin-ext (~84 КБ),
+ * который иначе качается ради одного символа в ценах. Если локального шрифта
+ * нет или в нём нет ₽, браузер откатится на Inter, как раньше.
+ */
+@font-face {
+  font-family: 'Ruble System';
+  src: local('Roboto'), local('Roboto-Regular'), local('Segoe UI'),
+    local('SegoeUI'), local('Helvetica Neue'), local('HelveticaNeue'),
+    local('Arial'), local('ArialMT');
+  unicode-range: U+20BD;
+  font-display: swap;
+}
+
+/*
  * «Премьер» design tokens — extracted from Figma (file mKTvNmKTTEW4S89Bha0xKA,
  * desktop home node 31:821). Russian-aesthetic salon: Monomakh Unicode uppercase
  * headings, Inter body, warm beige + off-white, green CTA, khokhloma ornaments.
@@ -11,7 +25,7 @@
 
   /* ---- Fonts (aliased to next/font vars set on <html>; distinct names avoid
      the circular-ref bug) ---- */
-  --font-ui: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-ui: 'Ruble System', var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-body: var(--font-ui);
   --font-heading: var(--font-monomakh), 'Times New Roman', serif;
   --font-logo: var(--font-heading);
