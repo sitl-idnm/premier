@@ -12,9 +12,10 @@ const Promos: FC<{ data: SiteContent['promos'] }> = ({ data }) => {
     <section className={styles.root} id="promos">
       {/* eslint-disable-next-line @next/next/no-img-element -- decorative vector background */}
       <img
-        src="/images/promos-bg.svg"
+        src="/images/promos-bg.webp"
         alt=""
         aria-hidden="true"
+        loading="lazy"
         className={styles.bg}
       />
 
@@ -43,7 +44,7 @@ const Promos: FC<{ data: SiteContent['promos'] }> = ({ data }) => {
 
           <article className={styles.glass}>
             <Image
-              src="/images/promo-deco.png"
+              src="/images/promo-deco.webp"
               alt=""
               width={164}
               height={164}

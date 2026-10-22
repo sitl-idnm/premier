@@ -50,14 +50,25 @@ export const Envelope: FC = () => {
   return (
     <div ref={stageRef} className={styles.stage} aria-hidden="true">
       {/* eslint-disable @next/next/no-img-element -- GSAP-animated layers / vectors need the raw <img> */}
-      <img src="/images/envelope-back.svg" alt="" className={styles.back} />
+      <img
+        src="/images/envelope-back.webp"
+        alt=""
+        loading="lazy"
+        className={styles.back}
+      />
       <img
         ref={photoRef}
-        src="/images/gift-photo.png"
+        src="/images/gift-photo.webp"
         alt=""
+        loading="lazy"
         className={styles.photo}
       />
-      <img src="/icons/envelope-front.svg" alt="" className={styles.front} />
+      <img
+        src="/icons/envelope-front.svg"
+        alt=""
+        loading="lazy"
+        className={styles.front}
+      />
       {/* eslint-enable @next/next/no-img-element */}
     </div>
   )

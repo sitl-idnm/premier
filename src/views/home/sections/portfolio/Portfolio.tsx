@@ -70,7 +70,7 @@ const Portfolio: FC<{ data: SiteContent['portfolio'] }> = ({ data }) => {
 
       <div className={styles.ctaBand}>
         <Image
-          src="/images/portfolio-cta.png"
+          src="/images/portfolio-cta.webp"
           alt=""
           width={120}
           height={120}

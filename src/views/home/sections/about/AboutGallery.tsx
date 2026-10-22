@@ -24,9 +24,10 @@ export const AboutGallery: FC<{ photos: string[] }> = ({ photos }) => {
     <div className={styles.gallery}>
       {/* eslint-disable-next-line @next/next/no-img-element -- decorative vector «mirror» cloud */}
       <img
-        src="/icons/about-cloud.svg"
+        src="/images/about-cloud.webp"
         alt=""
         aria-hidden="true"
+        loading="lazy"
         className={styles.frame}
       />
 
