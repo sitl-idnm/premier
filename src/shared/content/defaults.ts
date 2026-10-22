@@ -21,7 +21,7 @@ export const DEFAULT_CONTENT = {
     phoneDisplay: '+7 (495) 150-91-11',
     phoneHref: 'tel:+74951509111',
     email: 'Info1@premiersalon.ru',
-    vk: 'https://vk.com/',
+    vk: '', // реальная группа ВК не указана — ссылка в окне «спасибо» скрыта, пока поле пустое
     telegram: 'https://t.me/premiermoscow',
     whatsapp: 'https://wa.me/74951509111',
     site: 'https://premiersalon.ru',

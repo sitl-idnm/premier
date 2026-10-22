@@ -11,18 +11,28 @@ type ThanksBodyProps = {
   contacts: SiteContent['contacts']
 }
 
+/** Ссылка на конкретную группу, а не заглушка вида «https://vk.com/». */
+const isRealLink = (url: string) => {
+  try {
+    return new URL(url).pathname.replace(/\//g, '') !== ''
+  } catch {
+    return false
+  }
+}
+
 /** Shared "заявка принята" body (used by both modals after submit). */
-export const ThanksBody: FC<ThanksBodyProps> = ({ modals, contacts }) => (
-  <div className={styles.thanks}>
-    <p className={styles.thanksPrompt}>{modals.thanksPrompt}</p>
-    <a
-      href={contacts.vk}
-      target="_blank"
-      rel="noreferrer"
-      className={styles.subscribe}
-      onClick={() => ymGoal(GOALS.clickVk)}
-    >
-      {modals.subscribeLabel}
-    </a>
-  </div>
-)
+export const ThanksBody: FC<ThanksBodyProps> = ({ modals, contacts }) =>
+  isRealLink(contacts.vk) ? (
+    <div className={styles.thanks}>
+      <p className={styles.thanksPrompt}>{modals.thanksPrompt}</p>
+      <a
+        href={contacts.vk}
+        target="_blank"
+        rel="noreferrer"
+        className={styles.subscribe}
+        onClick={() => ymGoal(GOALS.clickVk)}
+      >
+        {modals.subscribeLabel}
+      </a>
+    </div>
+  ) : null
