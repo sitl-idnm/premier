@@ -1,13 +1,19 @@
+import type { Metadata } from 'next'
 import { getSiteContent } from '@/shared/content'
+import { socialMeta } from '@/shared/lib/seo'
 
 import { renderPolicyBody } from './policyBody'
 import styles from './privacy.module.scss'
 
-export const metadata = {
-  title: 'Политика конфиденциальности',
-  description:
-    'Политика обработки персональных данных и пользовательское соглашение салона красоты «Премьер».',
-  alternates: { canonical: '/privacy' }
+const title = 'Политика конфиденциальности'
+const description =
+  'Политика обработки персональных данных и пользовательское соглашение салона красоты «Премьер».'
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: { canonical: '/privacy' },
+  ...socialMeta(`${title} — Премьер`, description, '/privacy')
 }
 
 const PrivacyPage = async () => {

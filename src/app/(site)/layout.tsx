@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import type { Metadata } from 'next'
 import { getSiteContent } from '@/shared/content'
+import { socialMeta } from '@/shared/lib/seo'
 import { Footer } from '@modules/footer'
 import { Header } from '@modules/header'
 
@@ -23,17 +24,9 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: meta.description,
     applicationName: meta.applicationName,
-    keywords: meta.keywords,
     authors: [{ name: meta.applicationName }],
     alternates: { canonical: '/' },
-    openGraph: {
-      type: 'website',
-      locale: 'ru_RU',
-      url: contacts.site,
-      siteName: meta.applicationName,
-      title: meta.title,
-      description: meta.description
-    },
+    ...socialMeta(meta.title, meta.description, '/'),
     robots: {
       index: true,
       follow: true,

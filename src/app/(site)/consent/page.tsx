@@ -1,13 +1,19 @@
+import type { Metadata } from 'next'
 import { getSiteContent } from '@/shared/content'
+import { socialMeta } from '@/shared/lib/seo'
 
 import { renderPolicyBody } from '../privacy/policyBody'
 import styles from '../privacy/privacy.module.scss'
 
-export const metadata = {
-  title: 'Согласие на обработку персональных данных',
-  description:
-    'Согласие на обработку персональных данных салона красоты «Премьер».',
-  alternates: { canonical: '/consent' }
+const title = 'Согласие на обработку персональных данных'
+const description =
+  'Согласие на обработку персональных данных салона красоты «Премьер».'
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: { canonical: '/consent' },
+  ...socialMeta(`${title} — Премьер`, description, '/consent')
 }
 
 const ConsentPage = async () => {
