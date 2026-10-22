@@ -5,6 +5,7 @@ import { nbp } from '@/shared/lib/typography'
 
 import styles from './Hero.module.scss'
 
+const SEO_H1 = 'Салон красоты в Москве — Премьер'
 const HERO_SRC = '/images/hero-main.webp'
 const HERO_ALT = 'Мастер салона «Премьер»'
 // Прозрачный 1×1: <source> с ним отключает загрузку фото на «чужом» брейкпоинте
@@ -35,6 +36,8 @@ const Hero: FC<{ data: SiteContent['hero'] }> = ({ data }) => {
 
   return (
     <section className={styles.root} id="hero">
+      {/* Единственный h1 страницы — с ключевыми словами; видимые слоганы ниже — <p>. */}
+      <h1 className={styles.srOnly}>{SEO_H1}</h1>
       {/* Desktop / tablet — scaled 1200×508 canvas (matches Figma exactly) */}
       <div className={styles.canvas}>
         {/* eslint-disable-next-line @next/next/no-img-element -- decorative ornament, cqw-positioned */}
@@ -59,7 +62,7 @@ const Hero: FC<{ data: SiteContent['hero'] }> = ({ data }) => {
           className={styles.photoSmall}
         />
         <p className={styles.eyebrow}>{nbp(data.eyebrow)}</p>
-        <h1 className={styles.title}>{nbp(data.title)}</h1>
+        <p className={styles.title}>{nbp(data.title)}</p>
         <p className={styles.note}>
           {nbp(data.noteLead)}
           <strong>{data.noteAccent}</strong>
@@ -74,7 +77,7 @@ const Hero: FC<{ data: SiteContent['hero'] }> = ({ data }) => {
           <img {...mob} />
         </picture>
         <p className={styles.mEyebrow}>{nbp(data.eyebrow)}</p>
-        <h1 className={styles.mTitle}>{nbp(data.title)}</h1>
+        <p className={styles.mTitle}>{nbp(data.title)}</p>
         <p className={styles.mNote}>
           {nbp(data.noteLead)}
           <strong>{data.noteAccent}</strong>

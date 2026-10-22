@@ -19,6 +19,10 @@
   }
 }
 
+.srOnly {
+  @include mixins.visually-hidden;
+}
+
 .pic {
   display: contents;
 }

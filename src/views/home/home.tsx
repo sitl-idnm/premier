@@ -11,6 +11,7 @@ import Prices from './sections/prices/Prices'
 import Reviews from './sections/reviews/Reviews'
 import Salons from './sections/salons/Salons'
 import Specialists from './sections/specialists/Specialists'
+import SalonsJsonLd from './SalonsJsonLd'
 
 const Home = async () => {
   const content = await getSiteContent()
@@ -27,6 +28,7 @@ const Home = async () => {
 
   return (
     <main>
+      <SalonsJsonLd contacts={content.contacts} locations={content.locations} />
       <Hero data={content.hero} />
       {/* Акции скрыты по просьбе клиента — вернуть, когда появятся акции */}
       {/* <Promos data={content.promos} /> */}

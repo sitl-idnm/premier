@@ -1,8 +1,14 @@
 import { FC } from 'react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@ui/button'
 
 import styles from './not-found.module.scss'
+
+export const metadata: Metadata = {
+  title: 'Страница не найдена — Премьер',
+  robots: { index: false }
+}
 
 const NotFound: FC = () => (
   <main className={styles.root}>
