@@ -118,6 +118,7 @@
 
 .mPhoto {
   width: 100%;
+  height: auto; // перебивает атрибут height из getImageProps, работает aspect-ratio
   aspect-ratio: 318 / 195;
   border-radius: 20px;
   object-fit: cover;
