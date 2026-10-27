@@ -16,17 +16,22 @@ type StickyPromoProps = {
 }
 
 const DISMISS_KEY = 'premier-promo-dismissed'
+const HIDDEN_ATTR = 'data-promo-off'
+// Выполняется при разборе HTML, до первой отрисовки: если промо уже закрывали
+// в этой сессии, прячем его CSS-ом без мигания (сам блок рендерится на сервере,
+// чтобы фото находилось браузером сразу — на мобайле это LCP-элемент).
+const PRE_PAINT = `try{sessionStorage.getItem('${DISMISS_KEY}')==='1'&&document.documentElement.setAttribute('${HIDDEN_ATTR}','')}catch(e){}`
 
 /** «Скидка 20%» promo pinned to the bottom-right of the viewport, following the
  *  scroll (true `position: fixed` — mounted in the layout, outside the page
  *  `template` whose transform would otherwise trap a fixed child). A close button
  *  (top-right) dismisses it for the rest of the browser session. */
 export const StickyPromo: FC<StickyPromoProps> = ({ badge, title, sub, btn }) => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(true)
   const openBooking = useSetAtom(bookingAtom)
 
   useEffect(() => {
-    if (sessionStorage.getItem(DISMISS_KEY) !== '1') setVisible(true)
+    if (document.documentElement.hasAttribute(HIDDEN_ATTR)) setVisible(false)
   }, [])
 
   const onBook = () => {
@@ -46,6 +51,8 @@ export const StickyPromo: FC<StickyPromoProps> = ({ badge, title, sub, btn }) =>
   if (!visible) return null
 
   return (
+    <>
+    <script dangerouslySetInnerHTML={{ __html: PRE_PAINT }} />
     <div className={styles.wrap} role="complementary" aria-label={title}>
       <button
         type="button"
@@ -80,6 +87,7 @@ export const StickyPromo: FC<StickyPromoProps> = ({ badge, title, sub, btn }) =>
           width={1280}
           height={960}
           sizes="160px"
+          priority
           className={styles.photo}
         />
 
@@ -95,5 +103,6 @@ export const StickyPromo: FC<StickyPromoProps> = ({ badge, title, sub, btn }) =>
         </div>
       </div>
     </div>
+    </>
   )
 }

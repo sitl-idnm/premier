@@ -16,9 +16,12 @@ const inter = Inter({
 })
 
 // Heading typeface — Monomakh Unicode (Figma: uppercase display headings).
-// Self-hosted from the client-provided .otf for exact metric match.
+// Self-hosted, subset of the client-provided .otf (fonts/MonomakhUnicode.otf):
+// Latin, Latin-1, Cyrillic, punctuation, ₽, № → woff2 30 KB instead of 144 KB.
+// Re-generate: pyftsubset MonomakhUnicode.otf --unicodes="U+0020-007E,U+00A0-00FF,
+//   U+0400-045F,U+0490-0491,U+2000-206F,U+20BD,U+2116" --layout-features='*' --flavor=woff2
 const monomakh = localFont({
-  src: './fonts/MonomakhUnicode.otf',
+  src: './fonts/MonomakhUnicode.woff2',
   weight: '400',
   style: 'normal',
   variable: '--font-monomakh',
