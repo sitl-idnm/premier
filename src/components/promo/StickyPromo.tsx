@@ -26,7 +26,12 @@ const PRE_PAINT = `try{sessionStorage.getItem('${DISMISS_KEY}')==='1'&&document.
  *  scroll (true `position: fixed` — mounted in the layout, outside the page
  *  `template` whose transform would otherwise trap a fixed child). A close button
  *  (top-right) dismisses it for the rest of the browser session. */
-export const StickyPromo: FC<StickyPromoProps> = ({ badge, title, sub, btn }) => {
+export const StickyPromo: FC<StickyPromoProps> = ({
+  badge,
+  title,
+  sub,
+  btn
+}) => {
   const [visible, setVisible] = useState(true)
   const openBooking = useSetAtom(bookingAtom)
 
@@ -52,57 +57,66 @@ export const StickyPromo: FC<StickyPromoProps> = ({ badge, title, sub, btn }) =>
 
   return (
     <>
-    <script dangerouslySetInnerHTML={{ __html: PRE_PAINT }} />
-    <div className={styles.wrap} role="complementary" aria-label={title}>
-      <button
-        type="button"
-        className={styles.close}
-        aria-label="Закрыть"
-        onClick={onClose}
+      <script dangerouslySetInnerHTML={{ __html: PRE_PAINT }} />
+      <div
+        className={styles.wrap}
+        data-sticky-promo
+        role="complementary"
+        aria-label={title}
       >
-        <svg viewBox="0 0 14 14" aria-hidden="true">
-          <path
-            d="M1 1l12 12M13 1L1 13"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-          />
-        </svg>
-      </button>
-
-      <div className={styles.card}>
-        <span className={styles.badge}>
-          <svg className={styles.flame} viewBox="0 0 12 15" aria-hidden="true">
+        <button
+          type="button"
+          className={styles.close}
+          aria-label="Закрыть"
+          onClick={onClose}
+        >
+          <svg viewBox="0 0 14 14" aria-hidden="true">
             <path
-              d="M6.5.2c.2 2 .9 3 1.9 4.2 1.1 1.4 2.1 2.8 2.1 5A4.5 4.5 0 0 1 1 9.4c0-1.6.8-3 1.8-4C2.6 6.6 3.4 7.2 4.2 7c-.5-2.2.6-5.3 2.3-6.8Z"
-              fill="currentColor"
+              d="M1 1l12 12M13 1L1 13"
+              stroke="currentColor"
+              strokeWidth="1.6"
+              strokeLinecap="round"
             />
           </svg>
-          {badge}
-        </span>
+        </button>
 
-        <Image
-          src="/images/hero-discount.png"
-          alt=""
-          width={1280}
-          height={960}
-          sizes="160px"
-          priority
-          className={styles.photo}
-        />
+        <div className={styles.card}>
+          <span className={styles.badge}>
+            <svg
+              className={styles.flame}
+              viewBox="0 0 12 15"
+              aria-hidden="true"
+            >
+              <path
+                d="M6.5.2c.2 2 .9 3 1.9 4.2 1.1 1.4 2.1 2.8 2.1 5A4.5 4.5 0 0 1 1 9.4c0-1.6.8-3 1.8-4C2.6 6.6 3.4 7.2 4.2 7c-.5-2.2.6-5.3 2.3-6.8Z"
+                fill="currentColor"
+              />
+            </svg>
+            {badge}
+          </span>
 
-        <div className={styles.info}>
-          <p className={styles.text}>
-            <strong>{title}</strong>
-            <br />
-            {sub}
-          </p>
-          <button type="button" className={styles.btn} onClick={onBook}>
-            {btn}
-          </button>
+          <Image
+            src="/images/hero-discount.png"
+            alt=""
+            width={1280}
+            height={960}
+            sizes="160px"
+            priority
+            className={styles.photo}
+          />
+
+          <div className={styles.info}>
+            <p className={styles.text}>
+              <strong>{title}</strong>
+              <br />
+              {sub}
+            </p>
+            <button type="button" className={styles.btn} onClick={onBook}>
+              {btn}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
     </>
   )
 }

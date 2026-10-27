@@ -52,7 +52,9 @@ export const AboutGallery: FC<{ photos: string[] }> = ({ photos }) => {
           <button
             key={src}
             type="button"
-            className={classNames(styles.dot, { [styles.dotActive]: i === active })}
+            className={classNames(styles.dot, {
+              [styles.dotActive]: i === active
+            })}
             aria-label={`Фото ${i + 1}`}
             aria-current={i === active}
             onClick={() => setActive(i)}

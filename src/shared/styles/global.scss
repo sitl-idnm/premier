@@ -201,3 +201,8 @@ button {
     background: var(--bg-page);
   }
 }
+
+/* StickyPromo закрыт в этой сессии — прячем до гидрации (атрибут ставит inline-скрипт). */
+html[data-promo-off] [data-sticky-promo] {
+  display: none;
+}
