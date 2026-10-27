@@ -42,7 +42,7 @@ const Salons: FC<{ data: SiteContent['salons'] }> = ({ data }) => {
                 alt=""
                 width={1200}
                 height={1600}
-                sizes="(max-width: 900px) 100vw, 300px"
+                sizes="(max-width: 560px) 100vw, (max-width: 900px) 40vw, 230px"
                 className={styles.photo}
               />
             </article>

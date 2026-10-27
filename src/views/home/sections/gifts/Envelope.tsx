@@ -1,7 +1,8 @@
 'use client'
 
 import { FC, useEffect, useRef } from 'react'
-import { getGsap, prefersReducedMotion } from '@/shared/lib/gsap'
+import Image from 'next/image'
+import { prefersReducedMotion } from '@/shared/lib/motion'
 
 import styles from './Envelope.module.scss'
 
@@ -18,44 +19,40 @@ export const Envelope: FC = () => {
     const photo = photoRef.current
     if (!stage || !photo) return
 
-    if (prefersReducedMotion()) {
-      photo.style.opacity = '1'
-      photo.style.transform = 'rotate(9deg)'
+    if (prefersReducedMotion() || !('IntersectionObserver' in window)) {
+      photo.classList.add(styles.shown)
       return
     }
 
-    const { gsap } = getGsap()
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        photo,
-        { y: -130, rotate: 0, autoAlpha: 0 },
-        {
-          y: 0,
-          rotate: 9,
-          autoAlpha: 1,
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: stage,
-            start: 'top 55%',
-            toggleActions: 'play none none reverse'
-          }
+    // Как ScrollTrigger `start: 'top 55%'` + toggleActions «play none none reverse»:
+    // играем, когда верх блока поднялся выше 55% экрана; откатываем, только если
+    // блок снова ушёл вниз под эту линию (при прокрутке дальше вниз фото остаётся).
+    photo.classList.add(styles.armed)
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          photo.classList.add(styles.shown)
+        } else if (entry.boundingClientRect.top > 0) {
+          photo.classList.remove(styles.shown)
         }
-      )
-    }, stage)
-
-    return () => ctx.revert()
+      },
+      { rootMargin: '0px 0px -45% 0px' }
+    )
+    io.observe(stage)
+    return () => io.disconnect()
   }, [])
 
   return (
     <div ref={stageRef} className={styles.stage} aria-hidden="true">
-      {/* eslint-disable @next/next/no-img-element -- GSAP-animated layers / vectors need the raw <img> */}
-      <img
+      <Image
         src="/images/envelope-back.webp"
         alt=""
-        loading="lazy"
+        width={1000}
+        height={789}
+        sizes="(max-width: 900px) 480px, 615px"
         className={styles.back}
       />
+      {/* eslint-disable @next/next/no-img-element -- scroll-animated photo / vector flap need the raw <img> */}
       <img
         ref={photoRef}
         src="/images/gift-photo.webp"

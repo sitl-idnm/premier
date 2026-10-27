@@ -40,12 +40,13 @@ const Hero: FC<{ data: SiteContent['hero'] }> = ({ data }) => {
       <h1 className={styles.srOnly}>{SEO_H1}</h1>
       {/* Desktop / tablet — scaled 1200×508 canvas (matches Figma exactly) */}
       <div className={styles.canvas}>
-        {/* eslint-disable-next-line @next/next/no-img-element -- decorative ornament, cqw-positioned */}
-        <img
+        <Image
           src="/images/hero-ornament.webp"
           alt=""
           aria-hidden="true"
-          loading="lazy"
+          width={936}
+          height={356}
+          sizes="(max-width: 1200px) 39vw, 468px"
           className={styles.ornament}
         />
         <picture className={styles.pic}>
