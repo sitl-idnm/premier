@@ -111,14 +111,18 @@ const Specialists: FC<{ salons: SalonStaff[] }> = ({ salons }) => {
       moved: false,
       pointerId: e.pointerId
     }
-    t.setPointerCapture(e.pointerId)
   }
   const onPointerMove = (e: React.PointerEvent) => {
     const t = trackRef.current
     if (!t || !drag.current.down) return
     const dx = e.clientX - drag.current.startX
-    if (Math.abs(dx) > 4) drag.current.moved = true
-    t.scrollLeft = drag.current.startLeft - dx
+    // Захват только когда начался именно drag: с захватом с pointerdown браузер
+    // отдаёт click треку, а не карточке, и модалка мастера не открывается.
+    if (!drag.current.moved && Math.abs(dx) > 4) {
+      drag.current.moved = true
+      t.setPointerCapture(e.pointerId)
+    }
+    if (drag.current.moved) t.scrollLeft = drag.current.startLeft - dx
   }
   const endDrag = () => {
     if (!drag.current.down) return
