@@ -5,6 +5,7 @@ import { Portal } from '@/service/portal'
 import { bookingAtom } from '@/shared/atoms/bookingAtom'
 import { useScrollLock } from '@/shared/hooks'
 import { GOALS, ymGoal } from '@/shared/lib/metrika'
+import { formatRuPhone, phoneDigits } from '@/shared/lib/phone'
 import classNames from 'classnames'
 import { useAtom } from 'jotai'
 
@@ -30,6 +31,13 @@ async function call(payload: Record<string, unknown>) {
   const json = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error(json?.error || `HTTP ${res.status}`)
   return json
+}
+
+/** Текст ошибки YClients для пользователя (без технического префикса пути). */
+function ycMessage(e: unknown, fallback: string): string {
+  const raw = e instanceof Error ? e.message : ''
+  const m = /^yclients [^:]+: (.+)$/.exec(raw)
+  return m && !/^\d+$/.test(m[1]) ? m[1] : fallback
 }
 
 // Regular-space thousands (avoids nbsp from toLocaleString).
@@ -218,7 +226,8 @@ const Body = () => {
     return days
   }, [view])
 
-  const digits = phone.replace(/\D/g, '')
+  // Маска гарантирует формат 7XXXXXXXXXX (8… и голые 10 цифр нормализуются).
+  const digits = phoneDigits(phone)
   const phoneOk = digits.length === 11
   const close = () => setCtx({ open: false })
 
@@ -237,14 +246,22 @@ const Body = () => {
     }
     setLoading(true)
     setError('')
+    let needCode = true
     try {
-      await call({ action: 'code', salon, phone: digits, fullname: `${surname} ${name}`.trim() })
-      go('code')
-    } catch {
-      setError('Не удалось отправить код подтверждения. Проверьте телефон.')
-    } finally {
+      const res = await call({ action: 'code', salon, phone: digits, fullname: `${surname} ${name}`.trim() })
+      needCode = res?.needCode !== false
+    } catch (e) {
+      setError(ycMessage(e, 'Не удалось отправить код подтверждения. Проверьте телефон.'))
       setLoading(false)
+      return
     }
+    if (needCode) {
+      setLoading(false)
+      go('code')
+      return
+    }
+    // В филиале выключено подтверждение кодом — записываем сразу.
+    await createBooking('')
   }
 
   const submitCode = async () => {
@@ -254,6 +271,10 @@ const Body = () => {
     }
     setLoading(true)
     setError('')
+    await createBooking(code.trim())
+  }
+
+  const createBooking = async (confirmCode: string) => {
     try {
       await call({
         action: 'record',
@@ -261,7 +282,7 @@ const Body = () => {
         phone: digits,
         fullname: [surname, name, patronymic].filter(Boolean).join(' ').trim(),
         email,
-        code: code.trim(),
+        code: confirmCode,
         comment,
         serviceIds,
         staffId: staffId ?? 0,
@@ -269,8 +290,8 @@ const Body = () => {
       })
       ymGoal(GOALS.submitBooking, { place: 'flow' })
       setStep('done')
-    } catch {
-      setError('Неверный код или запись недоступна. Попробуйте снова.')
+    } catch (e) {
+      setError(ycMessage(e, 'Неверный код или запись недоступна. Попробуйте снова.'))
     } finally {
       setLoading(false)
     }
@@ -440,7 +461,7 @@ const Body = () => {
                 <input className={styles.input} placeholder="Фамилия" value={surname} onChange={(e) => setSurname(e.target.value)} />
                 <input className={styles.input} placeholder="Имя *" value={name} onChange={(e) => setName(e.target.value)} />
                 <input className={styles.input} placeholder="Отчество" value={patronymic} onChange={(e) => setPatronymic(e.target.value)} />
-                <input className={styles.input} placeholder="+7 — телефон *" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                <input className={styles.input} placeholder="+7 (___) ___-__-__ *" inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(formatRuPhone(e.target.value))} />
                 <input className={styles.input} placeholder="E-mail" inputMode="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <textarea className={styles.textarea} placeholder="Комментарий к записи" value={comment} onChange={(e) => setComment(e.target.value)} />
 
@@ -459,12 +480,13 @@ const Body = () => {
               <p className={styles.hint}>Мы отправили код подтверждения на {phone}.</p>
               <input className={styles.input} placeholder="Код из СМС" inputMode="numeric" value={code} onChange={(e) => setCode(e.target.value)} />
               <button type="button" className={styles.primary} disabled={loading} onClick={submitCode}>Подтвердить запись</button>
+              <button type="button" className={styles.linkBtn} disabled={loading} onClick={submitDetails}>Отправить код ещё раз</button>
             </div>
           )}
 
           {step === 'done' && (
             <div className={styles.done}>
-              <p className={styles.doneText}>Вы записаны! Мы пришлём подтверждение по СМС.</p>
+              <p className={styles.doneText}>Вы записаны! Ждём вас в салоне.</p>
               <button type="button" className={styles.primary} onClick={close}>Отлично</button>
             </div>
           )}

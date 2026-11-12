@@ -103,6 +103,19 @@ export async function bookTimes(
   )
 }
 
+/**
+ * Требует ли филиал подтверждение онлайн-записи кодом (настройка в YClients).
+ * Когда выключено, book_code отвечает «успешно», но ничего не шлёт —
+ * поэтому шаг с кодом нужно пропускать, а запись создавать без кода.
+ */
+export async function needsPhoneConfirmation(salon: string): Promise<boolean> {
+  const id = companyId(salon)
+  const data = await yc<{ phone_confirmation?: boolean }>(`/company/${id}`, {
+    revalidate: FRESH
+  })
+  return data.phone_confirmation !== false
+}
+
 /** Send the SMS confirmation code required to create a booking. */
 export async function sendCode(
   salon: string,
@@ -121,7 +134,8 @@ export type CreateRecordInput = {
   phone: string
   fullname: string
   email?: string
-  code: string
+  /** Пусто, если в филиале выключено подтверждение кодом. */
+  code?: string
   comment?: string
   serviceIds: number[]
   staffId: number
@@ -137,7 +151,7 @@ export async function createRecord(input: CreateRecordInput): Promise<unknown> {
       phone: input.phone,
       fullname: input.fullname,
       email: input.email ?? '',
-      code: input.code,
+      code: input.code ?? '',
       comment: input.comment ?? '',
       appointments: [
         {

@@ -5,6 +5,7 @@ import {
   bookStaff,
   bookTimes,
   createRecord,
+  needsPhoneConfirmation,
   sendCode
 } from '@/shared/lib/yclients/booking'
 import { isYclientsConfigured } from '@/shared/lib/yclients/config'
@@ -51,16 +52,20 @@ export async function POST(req: Request) {
             serviceIds
           )
         })
-      case 'code':
+      case 'code': {
+        // Подтверждение выключено в YClients → код не шлём, клиент создаёт запись сразу.
+        if (!(await needsPhoneConfirmation(salon)))
+          return NextResponse.json({ ok: true, needCode: false })
         await sendCode(salon, String(body.phone), String(body.fullname))
-        return NextResponse.json({ ok: true })
+        return NextResponse.json({ ok: true, needCode: true })
+      }
       case 'record': {
         const result = await createRecord({
           salon,
           phone: String(body.phone),
           fullname: String(body.fullname),
           email: body.email ? String(body.email) : undefined,
-          code: String(body.code),
+          code: body.code ? String(body.code) : '',
           comment: body.comment ? String(body.comment) : undefined,
           serviceIds,
           staffId: Number(body.staffId),
